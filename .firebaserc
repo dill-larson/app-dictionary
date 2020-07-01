@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "app-dictionary-f0a2d": {
+      "hosting": {
+        "app-dictionary": [
+          "app-dictionary-f0a2d"
+        ]
+      }
+    }
+  }
+}
