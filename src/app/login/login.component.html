@@ -1,0 +1,23 @@
+<form class="form-login">
+    <div class="text-center mb-4">
+        <h2 class="h2 mb-3 font-weight-normal">Log In</h2>
+    </div>
+
+    <!-- <div class="form-label-group">
+        <input name="email" [(ngModel)]="user.email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputEmail">Email address</label>
+    </div>
+
+    <div class="form-label-group">
+        <input name="password" [(ngModel)]="user.password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <label for="inputPassword">Password</label>
+    </div> -->
+
+    <div class="checkbox mb-3">
+        <label>
+        <input type="checkbox" value="remeber-me"> Remember Me
+        </label>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" (click)="validateLogin();" type="submit">Log In</button>
+</form>
