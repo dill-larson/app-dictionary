@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 //import { User } from '../models/user.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SignUpService {
 
   constructor(private http: HttpClient) { }

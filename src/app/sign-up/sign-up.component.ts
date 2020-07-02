@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { SignUpService } from './sign-up.service';
+//import { SignUpService } from './sign-up.service';
 //import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
-  providers: [ SignUpService ]
+  providers: [ ] //SignUpService
 })
 export class SignUpComponent implements OnInit {
   //public user : User;
   public confPassword : String;
   
-  constructor(private signUpService: SignUpService, private router: Router) {
+  constructor(private router: Router) { //private signUpService: SignUpService
     //this.user = new User();
     this.confPassword = '';
   }
