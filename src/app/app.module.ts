@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { CreateDictionaryComponent } from './create-dictionary/create-dictionary.component';
 import { SearchItemComponent } from './search-item/search-item.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ShowDictionaryComponent } from './show-dictionary/show-dictionary.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ProfileComponent } from './profile/profile.component';
     LoginComponent,
     CreateDictionaryComponent,
     SearchItemComponent,
-    ProfileComponent
+    ProfileComponent,
+    ShowDictionaryComponent
   ],
   imports: [
     BrowserModule,

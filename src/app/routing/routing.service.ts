@@ -8,6 +8,7 @@ import { LoginComponent } from '../login/login.component';
 import { CreateDictionaryComponent } from '../create-dictionary/create-dictionary.component';
 import { SearchItemComponent } from '../search-item/search-item.component';
 import { ProfileComponent } from '../profile/profile.component';
+import { ShowDictionaryComponent } from '../show-dictionary/show-dictionary.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'create-dictionary', component: CreateDictionaryComponent },
   { path: 'search/:key', component: SearchItemComponent },
   { path: 'profile/:user', component: ProfileComponent },
+  { path: 'dictionary/:dict', component: ShowDictionaryComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 

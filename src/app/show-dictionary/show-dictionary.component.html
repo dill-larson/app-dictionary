@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="text-left mb-4">
+        <h3 class="h3 mb-3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictSize }} Words)</h3>
+    </div>
+
+    <p *ngIf="words.length === 0">It looks like this dictionary is empty. Try adding some words by searching above.</p>
+
+    <button (click)="removeWords();" class="btn btn-primary">Remove Word(s)</button>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scole="col" class="remove-col">
+            <input type="checkbox" [(ngModel)]="check" (change)="toggleCheckboxes()" [checked]=false>
+            </th>
+            <th scope="col">Word</th>
+            <th scope="col" *ngIf="showSynonyms">Synonyms</th>
+            <th scope="col" *ngIf="showSynonyms"></th> <!--Column for 2nd synonym-->
+            <th scope="col" *ngIf="showSynonyms"></th> <!--Column for 3rd synonym-->
+            <th scope="col" *ngIf="showSynonyms"></th> <!--Column for collapse button-->
+        </tr>
+        </thead>
+
+        <tbody *ngFor="let word of words; index as i">
+        <tr>
+            <!--Checkbox-->
+            <td class="remove-col"><input type="checkbox" [(ngModel)]="checkboxArray[i]" (change)="addWordToRemove(word)"></td>
+            <!--Word-->
+            <div ngbDropdown class="d-table-cell">
+            <td id="dropdownBasic1" ngbDropdownToggle>{{ word.word | titlecase }}</td>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem (click)="removeWord(word)">Remove</button>
+                <button ngbDropdownItem (click)="getWordSynonyms(word, 'noun')">Show Noun Synonyms</button>
+                <button ngbDropdownItem (click)="getWordSynonyms(word, 'verb')">Show Verb Synonyms</button>
+                <button ngbDropdownItem (click)="hideSynonyms()">Hide Synonyms</button>
+            </div>
+            </div>
+            <!--Synonyms-->
+            <ng-container *ngIf="showSynonyms">
+            <div ngbDropdown class="d-table-cell" *ngFor="let syn of wordSynonyms.get(word).slice(0,3)">
+                <td  id="dropdownBasic1" ngbDropdownToggle>{{ syn | titlecase }}</td>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem (click)="addSyn(word, syn)">Add</button>
+                </div>
+            </div>
+            <td class="collapse-synonyms" *ngIf="wordSynonyms.get(word).length > 0" (click)="expandedRow[i] = !expandedRow[i]">+</td>
+            </ng-container>
+        </tr>
+        <!--Collapsible row-->
+        <ng-container *ngIf="expandedRow[i]">
+            <tr *ngFor="let row of numOfRows.get(word); index as j">
+            <td></td>
+            <td></td>
+            <div ngbDropdown class="d-table-cell" *ngFor="let syn of wordSynonyms.get(word).slice(3+(3*j),6+(3*j))">
+                <td  id="dropdownBasic1" ngbDropdownToggle>{{ syn | titlecase }}</td>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem (click)="addSyn(word, syn)">Add</button>
+                </div>
+            </div>
+            </tr>
+        </ng-container>
+        </tbody>
+    </table>
+</div>

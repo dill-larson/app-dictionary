@@ -1,0 +1,23 @@
+ul {
+    list-style-type: none;
+}
+.dropdown-toggle::after {
+    display:none;
+    border: transparent;
+}
+.remove-col {
+    width: 35px;
+}
+.collapse-synonyms {
+    cursor: pointer;
+}
+.btn-primary {
+    margin: 5px;
+    padding: 0.25rem 0.5rem;
+}
+span {
+    cursor: pointer;
+}
+.row {
+    border: black;
+}
