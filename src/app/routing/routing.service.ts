@@ -5,11 +5,13 @@ import { HomeComponent } from '../home/home.component';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 import { SignUpComponent } from '../sign-up/sign-up.component';
 import { LoginComponent } from '../login/login.component';
+import { CreateDictionaryComponent } from '../create-dictionary/create-dictionary.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'signup', component: SignUpComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'create-dictionary', component: CreateDictionaryComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 

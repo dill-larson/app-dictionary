@@ -12,6 +12,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { TopNavigationComponent } from './top-navigation/top-navigation.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { LoginComponent } from './login/login.component';
+import { CreateDictionaryComponent } from './create-dictionary/create-dictionary.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { LoginComponent } from './login/login.component';
     PageNotFoundComponent,
     TopNavigationComponent,
     SignUpComponent,
-    LoginComponent
+    LoginComponent,
+    CreateDictionaryComponent
   ],
   imports: [
     BrowserModule,
