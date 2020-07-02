@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="text-left mb-4">
+        <h2 class="h2 mb-3 font-weight-normal">{{ searchItem | titlecase }}</h2>
+    </div>
+
+    <!-- <h3 *ngIf="arrayOfDict">Dictionaries:</h3>
+    <div *ngFor = "let dict of arrayOfDict">
+        <a [routerLink]="['/dictionary', dict.name]">{{ dict.name }}</a>
+    </div> -->
+
+    <div class="text-left mb-4" *ngIf="nouns">
+        <h2 class="h2 mb-3 font-weight-normal">Nouns:</h2>
+    </div>
+    <ul class="nounList" >
+        <li *ngFor="let noun of nouns">
+            <span>{{ noun | titlecase }}</span>
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Add</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem>New Dictionary</button>
+                    <div class="dropdown-divider"></div> <!--Horizontal line-->
+                    <button ngbDropdownItem *ngFor="let dict of library" (click)="addWord(noun,1,dict)">{{ dict }}</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="text-left mb-4" *ngIf="verbs">
+        <h2 class="h2 mb-3 font-weight-normal">Verbs:</h2>
+    </div>
+    <ul class="verbList" >
+        <li *ngFor="let verb of verbs">
+            <span>{{ verb | titlecase }}</span>
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Add</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem>New Dictionary</button>
+                    <div class="dropdown-divider"></div> <!--Horizontal line-->
+                    <button ngbDropdownItem *ngFor="let dict of library" (click)="addWord(verb,2,dict)">{{ dict }}</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -13,6 +13,7 @@ import { TopNavigationComponent } from './top-navigation/top-navigation.componen
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { LoginComponent } from './login/login.component';
 import { CreateDictionaryComponent } from './create-dictionary/create-dictionary.component';
+import { SearchItemComponent } from './search-item/search-item.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CreateDictionaryComponent } from './create-dictionary/create-dictionary
     TopNavigationComponent,
     SignUpComponent,
     LoginComponent,
-    CreateDictionaryComponent
+    CreateDictionaryComponent,
+    SearchItemComponent
   ],
   imports: [
     BrowserModule,
