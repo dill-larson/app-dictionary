@@ -7,9 +7,9 @@ export class User {
 		this.password = '';
 		//this.library = [];
 	}
-	public name: String;
-	public email: String;
-	public password: String;
+	public name: string;
+	public email: string;
+	public password: string;
 	//private library: Dictionary[];
 
 	// public addDictionary(dict: Dictionary): void {
