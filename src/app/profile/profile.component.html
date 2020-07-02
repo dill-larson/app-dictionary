@@ -1,0 +1,52 @@
+<div>
+    <div class="row">
+        <div class="col form-profile">
+            <!--Title-->
+            <div class="text-left mb-4">
+                <h3 class="h3 mb-3 font-weight-normal">Profile:</h3>
+            </div>
+
+            <!--Name-->
+            <div class="form-label-group">
+                <input name="name" [(ngModel)]="retrievedUser.name" type="name" id="inputName" class="form-control" placeholder="Name" value="{{ retrievedUser.name }}">
+                <label for="inputName">Name</label>
+            </div>
+            
+            <!--Email-->
+            <div class="form-label-group">
+                <input name="email" [(ngModel)]="retrievedUser.email" type="email" id="inputEmail" class="form-control" placeholder="Email" value="{{ retrievedUser.email }}">
+                <label for="inputEmail">Email</label>
+            </div>
+
+            <!--New Password-->
+            <div class="form-label-group">
+                <input name="newPass" type="password" id="inputNewPass" class="form-control" placeholder="New Password">
+                <label for="inputNewPass">New Password</label>
+            </div>
+
+            <!--Confirm New Password-->
+            <div class="form-label-group">
+                <input name="newConfPass" type="password" id="inputNewConfPass" class="form-control" placeholder="Confirm New Password">
+                <label for="inputNewConfPass">Confirm New Password</label>
+            </div>
+            
+            <!--Old Password-->
+            <div class="form-label-group">
+                <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Old Password">
+                <label for="inputPassword">Old Password</label>
+            </div>
+            
+            <button class="btn btn-lg btn-primary btn-block">Update</button>
+        </div>
+        <div class="col">
+            <!--Title-->
+            <div class="text-left mb-4">
+                <h3 class="h3 mb-3 font-weight-normal">Library:</h3>
+            </div> 
+            
+            <div *ngFor="let dict of library">
+                <a class="h5" [routerLink]="['/dictionary', dict]">{{ dict }}</a>
+            </div>
+        </div>
+    </div>
+</div>

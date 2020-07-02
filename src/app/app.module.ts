@@ -14,6 +14,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { LoginComponent } from './login/login.component';
 import { CreateDictionaryComponent } from './create-dictionary/create-dictionary.component';
 import { SearchItemComponent } from './search-item/search-item.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SearchItemComponent } from './search-item/search-item.component';
     SignUpComponent,
     LoginComponent,
     CreateDictionaryComponent,
-    SearchItemComponent
+    SearchItemComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,7 @@ import { SignUpComponent } from '../sign-up/sign-up.component';
 import { LoginComponent } from '../login/login.component';
 import { CreateDictionaryComponent } from '../create-dictionary/create-dictionary.component';
 import { SearchItemComponent } from '../search-item/search-item.component';
+import { ProfileComponent } from '../profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'create-dictionary', component: CreateDictionaryComponent },
   { path: 'search/:key', component: SearchItemComponent },
+  { path: 'profile/:user', component: ProfileComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 
