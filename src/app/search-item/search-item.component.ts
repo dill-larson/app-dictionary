@@ -68,7 +68,7 @@ export class SearchItemComponent implements OnInit {
   }
 
   buildUrl(word: String, format: String) {
-    const apiUrl = "http://words.bighugelabs.com/api/2"
+    const apiUrl = "https://words.bighugelabs.com/api/2"
     const key = "e75fe36f1596362791ae487561ac2e07" //Steves: 3306ed5f2cd255658fab6cb62cccc82e
     return apiUrl + "/" + key + "/" + word + "/" + format; 
   }
