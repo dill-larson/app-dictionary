@@ -1,0 +1,27 @@
+<form class="form-signup">
+    <div class="text-center mb-4">
+        <h2 class="h2 mb-3 font-weight-normal">Sign Up</h2>
+    </div>
+
+    <!-- <div class="form-label-group">
+        <input name="name" [(ngModel)]="user.name" type="name" id="inputName" class="form-control" placeholder="Name" required autofocus>
+        <label for="inputName">Name</label>
+    </div>
+
+    <div class="form-label-group">
+        <input name="email" [(ngModel)]="user.email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required>
+        <label for="inputEmail">Email address</label>
+    </div>
+
+    <div class="form-label-group">
+        <input name="password" [(ngModel)]="user.password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <label for="inputPassword">Password</label>
+    </div> -->
+
+    <div class="form-label-group">
+        <input name="confirm-password" [(ngModel)]="confPassword" type="password" id="inputConfPassowrd" class="form-control" placeholder="Confirm password" required>
+        <label for="inputConfPassowrd">Confirm password</label>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" (click)="addUser();" type="submit">Sign Up</button>
+</form>

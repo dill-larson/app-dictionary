@@ -1,0 +1,12 @@
+.navbar-brand {
+    margin-right: 0;
+    padding-left: 0;
+}
+a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    background-color: transparent;
+}
+a:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
