@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResourceLoader } from '@angular/compiler'; //Why is this here?
 
-//import { LoginService } from './login.service';
+import { LoginService } from '../services/login.service';
 import { User } from '../models/user';
 
 
@@ -10,12 +10,12 @@ import { User } from '../models/user';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [  ] //LoginService
+  providers: [ LoginService ]
 })
 export class LoginComponent implements OnInit {
   public user : User;
 
-  constructor(private router: Router) { //private loginService: LoginService
+  constructor(private router: Router, private loginService: LoginService) {
     this.user = new User();
   }
 
@@ -24,17 +24,17 @@ export class LoginComponent implements OnInit {
 
   validateLogin() {
     if(this.user.email && this.user.password) {
-      //   this.loginService.validateLogin(this.user).subscribe(result => {
-      //     console.log('result is ', result);
-      //     if(result['status'] === 'success') {
-      //       localStorage.setItem("loggedInUser", this.user.email.toString());
-      //       this.router.navigate(['']);
-      //     } else {
-      //       alert('Wrong username or password');
-      //     }
-      // }, error => {
-      //   console.log('error is ', error);
-      // });
+        this.loginService.validateLogin(this.user).subscribe(result => {
+          console.log('result is ', result);
+          if(result['status'] === 'success') {
+            localStorage.setItem("loggedInUser", this.user.email.toString());
+            this.router.navigate(['']);
+          } else {
+            alert('Wrong username or password');
+          }
+      }, error => {
+        console.log('error is ', error);
+      });
     } else {
         alert('Enter username and password');
     }

@@ -6,7 +6,7 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   name: { type: String, required: true },
   library: { type: Array, "default": [], required: true }
-}, { 
+ }, { 
   versionKey: false,
   collection : 'users' 
 });
