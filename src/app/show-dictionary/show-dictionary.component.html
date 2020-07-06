@@ -1,9 +1,7 @@
-<div class="container">
+<div *ngIf="words?.length > 0; else noWords" class="container">
     <div class="text-left mb-4">
         <h3 class="h3 mb-3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictSize }} Words)</h3>
     </div>
-
-    <p *ngIf="words.length === 0">It looks like this dictionary is empty. Try adding some words by searching above.</p>
 
     <button (click)="removeWords();" class="btn btn-primary">Remove Word(s)</button>
 
@@ -62,3 +60,9 @@
         </tbody>
     </table>
 </div>
+
+<ng-template #noWords>
+    <div class="container">
+        <p>It looks like this dictionary is empty. Try adding some words by searching above.</p>
+    </div>
+</ng-template>
