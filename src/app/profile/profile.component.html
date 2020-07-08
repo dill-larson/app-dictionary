@@ -8,13 +8,13 @@
 
             <!--Name-->
             <div class="form-label-group">
-                <input name="name" [(ngModel)]="retrievedUser.name" type="name" id="inputName" class="form-control" placeholder="Name" value="{{ retrievedUser.name }}">
+                <input name="name" [(ngModel)]="user.name" type="name" id="inputName" class="form-control" placeholder="Name" value="{{ user.name }}">
                 <label for="inputName">Name</label>
             </div>
             
             <!--Email-->
             <div class="form-label-group">
-                <input name="email" [(ngModel)]="retrievedUser.email" type="email" id="inputEmail" class="form-control" placeholder="Email" value="{{ retrievedUser.email }}">
+                <input name="email" [(ngModel)]="user.email" type="email" id="inputEmail" class="form-control" placeholder="Email" value="{{ user.email }}">
                 <label for="inputEmail">Email</label>
             </div>
 
@@ -37,6 +37,7 @@
             </div>
             
             <button class="btn btn-lg btn-primary btn-block">Update</button>
+            <button class="btn btn-lg btn-danger btn-block">Delete</button>
         </div>
         <div class="col">
             <!--Title-->

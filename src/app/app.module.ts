@@ -5,6 +5,9 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule }    from '@angular/common/http';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from '../environments/environment.prod';
 
 import { AppRoutingModule } from './routing/routing.service';
 import { HomeComponent } from './home/home.component';
@@ -16,6 +19,8 @@ import { CreateDictionaryComponent } from './create-dictionary/create-dictionary
 import { SearchItemComponent } from './search-item/search-item.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ShowDictionaryComponent } from './show-dictionary/show-dictionary.component';
+
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -35,9 +40,11 @@ import { ShowDictionaryComponent } from './show-dictionary/show-dictionary.compo
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase, 'app-dictionary'),
+    AngularFirestoreModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

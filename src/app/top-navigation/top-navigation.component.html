@@ -8,16 +8,16 @@
     <form (keyup.enter)="search();" class="form-inline my-2 my-lg-0 mr-auto">
         <input name="search-item" [(ngModel)]="searchItem" type="text" class="form-control" type="search" placeholder="Search">
     </form>
-    <li *ngIf="user === ''" [ngbNavItem]="3" class="nav-item">
+    <li *ngIf="user.email == ''" [ngbNavItem]="3" class="nav-item">
         <a ngbNavLink routerLink="./signup" routerLinkActive="active">Sign Up</a>
     </li>
-    <li *ngIf="user === ''" [ngbNavItem]="4" class="nav-item">
+    <li *ngIf="user.email == ''" [ngbNavItem]="4" class="nav-item">
         <a ngbNavLink routerLink="./login" routerLinkActive="active">Log In</a>
     </li>
-    <li *ngIf="user !== ''" ngbDropdown class="nav-item">
-        <a href (click)="false" class="nav-link" ngbDropdownToggle>{{ user }}</a>
+    <li *ngIf="user.email != ''" ngbDropdown class="nav-item">
+        <a href (click)="false" class="nav-link" ngbDropdownToggle>{{ user.email }}</a>
         <div ngbDropdownMenu>
-        <button ngbDropdownItem [routerLink]="['/profile', user]">Profile</button>
+        <button ngbDropdownItem [routerLink]="['/profile', user.id]">Profile</button>
         <div class="dropdown-divider"></div>
         <button ngbDropdownItem (click)="logout();">Logout</button>
         </div>

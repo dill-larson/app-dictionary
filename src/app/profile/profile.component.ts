@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
-//import { UserService } from './user.service';
+import { UserService } from '../services/user.service';
 import { User } from '../models/user';
 
 @Component({
@@ -11,35 +11,35 @@ import { User } from '../models/user';
 })
 export class ProfileComponent implements OnInit {
 
+  public userEmail: string;
   public user: User;
-  public retrievedUser: User;
   public library: String[];
 
-  constructor(private route: ActivatedRoute) { //private userService: UserService
-    this.user = new User();
-    this.retrievedUser = new User();
+  constructor(private route: ActivatedRoute, private router: Router, private userService: UserService) {
+    this.user = {
+      id: '',
+      name: '',
+      email: '',
+      password: ''
+    }
   }
 
   ngOnInit(): void {
     this.route.params.subscribe(event => {
-      this.user.email = event.user;
-     });
-
-     this.getUser(this.user);
+      this.getUser(event.user);
+    });
   }
 
-  getUser(username: User) {
-    if(username) {
-    //   this.userService.getUser(username).subscribe(result => {
-    //     if(result['status'] === 'success' && result['data'].length >= 1) {
-    //       this.retrievedUser = result['data']['0'];
-    //       this.library = result['data']['0']['library'];
-    //     } else {
-    //       alert('Error retreiving '+ username.name);
-    //     }
-    // }, error => {
-    //   console.log('error is ', error);
-    // });
+  getUser(id: string) {
+    if(id != '') {
+      this.userService.getUser(id).subscribe(user => {
+        if(user == null) {
+          this.router.navigate(['**']);
+        }
+        else {
+          this.user = user;
+        }
+      });
     }
   }
 

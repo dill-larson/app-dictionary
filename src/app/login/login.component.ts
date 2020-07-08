@@ -2,38 +2,55 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResourceLoader } from '@angular/compiler'; //Why is this here?
 
-import { LoginService } from '../services/login.service';
+import { UserService } from '../services/user.service';
 import { User } from '../models/user';
-
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  providers: [ LoginService ]
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   public user : User;
+  public rememberMe: boolean;
 
-  constructor(private router: Router, private loginService: LoginService) {
-    this.user = new User();
+  constructor(private router: Router, private userService: UserService) {
+    this.user = {
+      name: '',
+      email: '',
+      password: ''
+    };
   }
 
   ngOnInit(): void {
+    this.rememberMe = false;
+  }
+
+  toggleRememberMe() {
+    this.rememberMe = !this.rememberMe;
+  }
+
+  validateUserInput(): boolean {
+    return this.user.email != '' && this.user.password != '';
   }
 
   validateLogin() {
-    if(this.user.email && this.user.password) {
-        this.loginService.validateLogin(this.user).subscribe(result => {
-          console.log('result is ', result);
-          if(result['status'] === 'success') {
-            localStorage.setItem("loggedInUser", this.user.email.toString());
-            this.router.navigate(['']);
-          } else {
-            alert('Wrong username or password');
+    if(this.validateUserInput()) {
+      this.userService.validateLogin(this.user).then((found) => {
+        if(found != null) {
+          if(this.rememberMe) {
+            localStorage.setItem("loggedInUser", this.user.email);
+            localStorage.setItem("token", found.toString()); //user ID in database
           }
-      }, error => {
-        console.log('error is ', error);
+          else {
+            sessionStorage.setItem("loggedInUser", this.user.email);
+            sessionStorage.setItem("token", found.toString()); //user ID in database
+          }
+          this.router.navigate(['']);
+        }
+        else {
+          alert('Invalid username and password combination');
+        }
       });
     } else {
         alert('Enter username and password');

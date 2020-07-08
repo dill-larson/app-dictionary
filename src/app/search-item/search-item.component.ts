@@ -31,7 +31,7 @@ export class SearchItemComponent implements OnInit {
   constructor(private route: ActivatedRoute, private http: HttpClient) { //, private dictService: DictionaryService, private userService: UserService
     this.word = new Word();
     this.dictionary = new Dictionary();
-    this.user = new User();
+    //this.user = new User();
   }
 
   ngOnInit(): void {

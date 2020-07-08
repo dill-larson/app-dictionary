@@ -1,21 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { User } from '../models/user';
+
 @Component({
   selector: 'app-top-navigation',
   templateUrl: './top-navigation.component.html',
   styleUrls: ['./top-navigation.component.css']
 })
 export class TopNavigationComponent implements OnInit {
-  public user: String;
+  public user: User;
   public searchItem: String;
 
   constructor(private router: Router) {
-    this.searchItem = '';
+    this.user = {
+      id: '',
+      name: '',
+      email: '',
+      password: ''
+    }
   }
 
   ngOnInit(): void {
-    this.user = localStorage.getItem("loggedInUser");
+    this.searchItem = '';
+    this.getUser();
+  }
+
+  getUser() {
+    if(localStorage.getItem("loggedInUser") != '') {
+      this.user.email = localStorage.getItem("loggedInUser");
+      this.user.id = localStorage.getItem("token");
+    }
+    else {
+      this.user.email = sessionStorage.getItem("loggedInUser");
+      this.user.id = sessionStorage.getItem("token");
+    }
   }
 
   search() {
@@ -24,6 +43,7 @@ export class TopNavigationComponent implements OnInit {
   
   logout() {
     localStorage.setItem("loggedInUser", '');
+    sessionStorage.setItem("loggedInUser", '');
     this.ngOnInit();
   }
 }
