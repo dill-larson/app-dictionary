@@ -21,6 +21,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ShowDictionaryComponent } from './show-dictionary/show-dictionary.component';
 
 import { UserService } from './services/user.service';
+import { DictionaryService } from './services/dictionary.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,10 @@ import { UserService } from './services/user.service';
     AngularFireModule.initializeApp(environment.firebase, 'app-dictionary'),
     AngularFirestoreModule
   ],
-  providers: [UserService],
+  providers: [
+    UserService,
+    DictionaryService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

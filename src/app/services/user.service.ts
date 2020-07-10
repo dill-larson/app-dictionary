@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, CollectionReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { User } from '../models/user';
 import { map } from 'rxjs/operators';
+
+import { User } from '../models/user';
+import { Dictionary } from '../models/dictionary';
 
 
 @Injectable({
@@ -41,11 +43,14 @@ export class UserService {
   }
 
   updateUser(user: User) {
-
+    const path = 'users/' + user.id;
+    this.userDoc = this.afs.doc(path);
+    this.userDoc.update(user);
   }
 
   deleteUser(user: User) {
-    this.userDoc = this.afs.doc('users/${user.email}');
+    const path = 'users/' + user.id;
+    this.userDoc = this.afs.doc(path);
     this.userDoc.delete();
   }
 
@@ -72,6 +77,13 @@ export class UserService {
   getUser(id: string): Observable<User> {
     const path = 'users/' + id;
     this.userDoc = this.afs.doc(path);
-    return this.userDoc.valueChanges();
+    const user = this.userDoc.snapshotChanges().pipe(
+      map(actions => {
+        const data = actions.payload.data() as User;
+        const id = actions.payload.data().id;
+        return { id, ...data };
+      })
+    );
+    return user;
   }
 }

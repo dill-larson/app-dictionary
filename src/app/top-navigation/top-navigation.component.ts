@@ -17,7 +17,8 @@ export class TopNavigationComponent implements OnInit {
       id: '',
       name: '',
       email: '',
-      password: ''
+      password: '',
+      library: []
     }
   }
 

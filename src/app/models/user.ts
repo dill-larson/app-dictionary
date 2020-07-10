@@ -1,9 +1,9 @@
-//import { Dictionary } from './dictionary.model';
+import { Dictionary } from '../models/dictionary';
 
 export interface User {
 	id?: string;
 	name: string;
 	email: string;
 	password: string;
-	//private library: Dictionary[];
+	library: Dictionary[];
 }

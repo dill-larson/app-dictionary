@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
-//import { DictionaryService } from './dictionary.service';
+import { DictionaryService } from '../services/dictionary.service';
 import { Dictionary } from '../models/dictionary';
 import { Word } from '../models/word';
 
@@ -24,8 +24,14 @@ export class ShowDictionaryComponent implements OnInit {
   public checkboxArray: Array<Boolean>;
   public check: boolean;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) { //, private dictService: DictionaryService
-    this.dictionary = new Dictionary();
+  constructor(private route: ActivatedRoute, private http: HttpClient, private dictionaryService: DictionaryService) {
+    this.dictionary = {
+      name: '',
+      owner: null,
+      view: null,
+      tags: [],
+      words: []
+    }
     this.addWord = new Word();
     this.wordSynonyms = new Map<Word, Array<String>>();
     this.numOfRows = new Map<Word, Array<Number>>();
@@ -44,6 +50,9 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   getDictionary(dict: string) {
+    // this.dictionaryService.getDictionary(dict).subscribe(dictionary => {
+    //   console.log(dictionary);
+    // });
     this.dictionary.name = dict;
     if(this.dictionary.name) {
     //   this.dictService.getDictionary(this.dictionary).subscribe(result => {

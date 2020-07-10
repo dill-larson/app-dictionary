@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
+import { DictionaryService } from '../services/dictionary.service';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
 
@@ -13,14 +14,14 @@ export class ProfileComponent implements OnInit {
 
   public userEmail: string;
   public user: User;
-  public library: String[];
 
-  constructor(private route: ActivatedRoute, private router: Router, private userService: UserService) {
+  constructor(private route: ActivatedRoute, private router: Router, private userService: UserService, private dictionaryService: DictionaryService) {
     this.user = {
       id: '',
       name: '',
       email: '',
-      password: ''
+      password: '',
+      library: []
     }
   }
 
@@ -39,6 +40,10 @@ export class ProfileComponent implements OnInit {
         else {
           this.user = user;
         }
+      });
+
+      this.dictionaryService.getDictionaries(id).subscribe(dictionaries => {
+        this.user.library = dictionaries;
       });
     }
   }

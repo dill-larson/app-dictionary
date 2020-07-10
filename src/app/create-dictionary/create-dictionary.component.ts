@@ -16,7 +16,7 @@ export class CreateDictionaryComponent implements OnInit {
   public user: User;
 
   constructor(private router: Router) { //private dictService: DictionaryService
-    this.dict = new Dictionary();
+    //this.dict = new Dictionary();
     //this.user = new User();
     this.dict.owner = this.user;
   }
