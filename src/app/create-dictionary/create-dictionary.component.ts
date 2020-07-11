@@ -19,7 +19,7 @@ export class CreateDictionaryComponent implements OnInit {
     this.dictionary = {
       name: '',
       owner: this.user,
-      view: 0,
+      view: Views.Public,
       tags: [],
       words: []
     }
