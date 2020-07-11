@@ -29,6 +29,12 @@ export class DictionaryService {
     this.dictionaryCollection.add(dictionary);
   }
 
+  deleteDictionary(dictionaryID: string) {
+    const path = 'dictionaries/' + dictionaryID;
+    this.dictionaryDoc = this.afs.doc(path);
+    this.dictionaryDoc.delete(); //TODO: delete subcollection 'words'
+  }
+
   getDictionaries(userID: string): Observable<Dictionary[]> {
     return this.afs.collection('dictionaries', ref => ref.where('owner', '==', userID)).snapshotChanges().pipe(
       map(actions => actions.map(a => {
