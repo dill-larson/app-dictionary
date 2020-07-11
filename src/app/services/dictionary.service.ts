@@ -25,6 +25,10 @@ export class DictionaryService {
     // );
   }
 
+  addDictionary(dictionary: Dictionary) {
+    this.dictionaryCollection.add(dictionary);
+  }
+
   getDictionaries(userID: string): Observable<Dictionary[]> {
     return this.afs.collection('dictionaries', ref => ref.where('owner', '==', userID)).snapshotChanges().pipe(
       map(actions => actions.map(a => {
