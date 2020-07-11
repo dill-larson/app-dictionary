@@ -13,7 +13,6 @@ import { Word } from '../models/word';
 })
 export class ShowDictionaryComponent implements OnInit {
   public dictionary: Dictionary;
-  public words: Array<Word>;
   public wordSynonyms: Map<Word, Array<String>>;
   public numOfRows: Map<Word, Array<Number>>
   public addWord: Word;
@@ -26,6 +25,7 @@ export class ShowDictionaryComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private dictionaryService: DictionaryService) {
     this.dictionary = {
+      id: '',
       name: '',
       owner: null,
       view: null,
@@ -44,46 +44,24 @@ export class ShowDictionaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(event => {
-      this.dictionary.name = event.dict;
+      this.dictionary.id = event.dict;
      });
-    this.getDictionary(this.dictionary.name);
+    this.getDictionary(this.dictionary.id);
   }
 
-  getDictionary(dict: string) {
-    // this.dictionaryService.getDictionary(dict).subscribe(dictionary => {
-    //   console.log(dictionary);
-    // });
-    this.dictionary.name = dict;
-    if(this.dictionary.name) {
-    //   this.dictService.getDictionary(this.dictionary).subscribe(result => {
-    //     if(result['status'] === 'success' && result['data'].length >= 1) {
-    //       this.words = (result['data']['0']['words']);
-    //       this.words.sort((word1, word2) => {
-    //         if(word1['word'] > word2['word']) {
-    //           return 1;
-    //         }
-    //         else if(word1['word'] < word2['word']) {
-    //           return -1;
-    //         }
-    //         else {
-    //           return 0;
-    //         }
-            
-    //       });
-    //       this.dictSize = this.words.length;
-    //       this.initWordSynArrays();
-    //       this.initCheckboxArray();
-    //     } else {
-    //       alert('Dictionary ' + this.dictionary.name + ' does not exist.');
-    //     }
-    // }, error => {
-    //   console.log('error is ', error);
-    // });
+  getDictionary(dictionaryID: string) {
+    if(dictionaryID != '') {
+      this.dictionaryService.getDictionary(dictionaryID).subscribe(dict => {
+        this.dictionary = dict;
+      });
+      this.dictionaryService.getWords(dictionaryID).subscribe(words => {
+        this.dictionary.words = words as Word[];
+      });
     }
   }
 
   initWordSynArrays() {
-    for(let word of this.words) {
+    for(let word of this.dictionary.words) {
       this.wordSynonyms.set(word, new Array<String>());
     }
   }
@@ -130,7 +108,7 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   initCheckboxArray() {
-    for(let word of this.words) {
+    for(let word of this.dictionary.words) {
       this.checkboxArray.push(false);
     }
   }

@@ -1,6 +1,6 @@
-<div *ngIf="words?.length > 0; else noWords" class="container">
+<div *ngIf="dictionary.words?.length > 0; else noWords" class="container">
     <div class="text-left mb-4">
-        <h3 class="h3 mb-3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictSize }} Words)</h3>
+        <h3 class="h3 mb-3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictionary.words.length }} Words)</h3>
     </div>
 
     <button (click)="removeWords();" class="btn btn-primary">Remove Word(s)</button>
@@ -19,7 +19,7 @@
         </tr>
         </thead>
 
-        <tbody *ngFor="let word of words; index as i">
+        <tbody *ngFor="let word of dictionary.words; index as i">
         <tr>
             <!--Checkbox-->
             <td class="remove-col"><input type="checkbox" [(ngModel)]="checkboxArray[i]" (change)="addWordToRemove(word)"></td>
