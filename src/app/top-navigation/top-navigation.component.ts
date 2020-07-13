@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { UserService } from '../services/user.service';
 import { User } from '../models/user';
 
 @Component({
@@ -12,7 +13,7 @@ export class TopNavigationComponent implements OnInit {
   public user: User;
   public searchItem: String;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private userService: UserService) {
     this.user = {
       id: '',
       name: '',
@@ -28,6 +29,11 @@ export class TopNavigationComponent implements OnInit {
   }
 
   getUser() {
+    this.userService.currentUser.subscribe(user => {
+      if(user != null) {
+        this.user = user;
+      }
+    });
     if(localStorage.getItem("loggedInUser") != '') {
       this.user.email = localStorage.getItem("loggedInUser");
       this.user.id = localStorage.getItem("token");

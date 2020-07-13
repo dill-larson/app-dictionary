@@ -37,17 +37,19 @@ export class LoginComponent implements OnInit {
 
   validateLogin() {
     if(this.validateUserInput()) {
-      this.userService.validateLogin(this.user).then((found) => {
-        if(found != null) {
-          if(this.rememberMe) {
-            localStorage.setItem("loggedInUser", this.user.email);
-            localStorage.setItem("token", found.toString()); //user ID in database
-          }
-          else {
-            sessionStorage.setItem("loggedInUser", this.user.email);
-            sessionStorage.setItem("token", found.toString()); //user ID in database
-          }
-          this.router.navigate(['']);
+      this.userService.testValidateLogin(this.user).subscribe(user => {
+        if(user != null) {
+          this.userService.currentUser.subscribe(user => {
+            if(this.rememberMe) {
+              localStorage.setItem("loggedInUser", user.email);
+              localStorage.setItem("token", user.id); //user ID in database
+            }
+            else {
+              sessionStorage.setItem("loggedInUser", user.email);
+              sessionStorage.setItem("token", user.id); //user ID in database
+            }
+            this.router.navigate(['']);
+          });
         }
         else {
           alert('Invalid username and password combination');

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, CollectionReference } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 import { User } from '../models/user';
 import { Dictionary } from '../models/dictionary';
@@ -14,6 +14,8 @@ export class UserService {
   private usersCollection: AngularFirestoreCollection<User>;
   private users: Observable<User[]>;
   private userDoc: AngularFirestoreDocument<User>;
+  private user = new BehaviorSubject<User>(null);
+  public currentUser = this.user.asObservable();
 
   constructor(private afs: AngularFirestore) {
     this.usersCollection = this.afs.collection<User>('users');
@@ -26,7 +28,6 @@ export class UserService {
     );
   }
 
-  //TODO: Remove this function
   // getUsers() {
   //   return this.users;
   // }
@@ -74,6 +75,25 @@ export class UserService {
     }
   }
 
+  testValidateLogin(user: User): Observable<User> {
+    var userSubject = new Subject<User>();
+
+    const retrievedUsers = this.afs.collection('users', ref => ref.where('email', '==', user.email).where('password', '==', user.password))
+      .get()
+      .pipe(map((item:firebase.firestore.QuerySnapshot) => {
+        return item.docs.map((dataItem: firebase.firestore.QueryDocumentSnapshot) => dataItem.data() as User);
+      }));
+
+    retrievedUsers.subscribe(users => {
+      if(users.length >= 1) {
+        this.user.next(users[0]);
+      }
+      userSubject.next(users[0]);
+    });
+
+    return userSubject.asObservable();
+  }
+
   getUser(id: string): Observable<User> {
     const path = 'users/' + id;
     this.userDoc = this.afs.doc(path);
@@ -81,6 +101,7 @@ export class UserService {
       map(actions => {
         const data = actions.payload.data() as User;
         const id = actions.payload.data().id;
+        this.user.next({ id, ...data });
         return { id, ...data };
       })
     );

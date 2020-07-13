@@ -64,6 +64,8 @@ export class DictionaryService {
     this.dictionaryDoc = this.afs.doc(path);
     const words = this.dictionaryDoc.collection('words', ref => ref.orderBy('word', 'asc')).valueChanges();
 
+    words.subscribe(wordsArray => console.log(wordsArray));
+
     return words;
   }
 }
