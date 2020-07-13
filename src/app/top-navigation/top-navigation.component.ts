@@ -34,12 +34,13 @@ export class TopNavigationComponent implements OnInit {
         this.user = user;
       }
     });
+    
     if(localStorage.getItem("loggedInUser") != '') {
-      this.user.email = localStorage.getItem("loggedInUser");
+      //this.user.email = localStorage.getItem("loggedInUser");
       this.user.id = localStorage.getItem("token");
     }
     else {
-      this.user.email = sessionStorage.getItem("loggedInUser");
+      //this.user.email = sessionStorage.getItem("loggedInUser");
       this.user.id = sessionStorage.getItem("token");
     }
   }

@@ -19,13 +19,13 @@ export class UserService {
 
   constructor(private afs: AngularFirestore) {
     this.usersCollection = this.afs.collection<User>('users');
-    this.users = this.usersCollection.snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as User;
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      }))
-    );
+    // this.users = this.usersCollection.snapshotChanges().pipe(
+    //   map(actions => actions.map(a => {
+    //     const data = a.payload.doc.data() as User;
+    //     const id = a.payload.doc.id;
+    //     return { id, ...data };
+    //   }))
+    // );
   }
 
   // getUsers() {
@@ -55,33 +55,17 @@ export class UserService {
     this.userDoc.delete();
   }
 
-  async validateLogin(user: User) {
-    try {
-      const retrievedUser = await this.usersCollection.ref.where('email','==',user.email).where('password','==',user.password).get();
-      if(retrievedUser.empty) {
-        return new Promise((found, rejection) => {
-          found(null);
-        });
-      }
-      return new Promise((found, rejection) => {
-        found(retrievedUser.docs[0].id);
-      });
-    }
-    catch(err) {
-      console.error(err);
-      return new Promise((found, rejection) => {
-        found(null);
-      });
-    }
-  }
-
-  testValidateLogin(user: User): Observable<User> {
+  validateLogin(user: User): Observable<User> {
     var userSubject = new Subject<User>();
 
     const retrievedUsers = this.afs.collection('users', ref => ref.where('email', '==', user.email).where('password', '==', user.password))
       .get()
       .pipe(map((item:firebase.firestore.QuerySnapshot) => {
-        return item.docs.map((dataItem: firebase.firestore.QueryDocumentSnapshot) => dataItem.data() as User);
+        return item.docs.map((dataItem: firebase.firestore.QueryDocumentSnapshot) => {
+          const data = dataItem.data() as User;
+          const id = dataItem.id;
+          return {id, ...data};
+        });
       }));
 
     retrievedUsers.subscribe(users => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ResourceLoader } from '@angular/compiler'; //Why is this here?
 
@@ -37,19 +37,21 @@ export class LoginComponent implements OnInit {
 
   validateLogin() {
     if(this.validateUserInput()) {
-      this.userService.testValidateLogin(this.user).subscribe(user => {
+      this.userService.validateLogin(this.user).subscribe(user => {
         if(user != null) {
           this.userService.currentUser.subscribe(user => {
             if(this.rememberMe) {
               localStorage.setItem("loggedInUser", user.email);
               localStorage.setItem("token", user.id); //user ID in database
+              console.log("Login component", localStorage.getItem("token"));
             }
             else {
               sessionStorage.setItem("loggedInUser", user.email);
               sessionStorage.setItem("token", user.id); //user ID in database
+              console.log("Login component", sessionStorage.getItem("token"));;
             }
             this.router.navigate(['']);
-          });
+          }).unsubscribe();
         }
         else {
           alert('Invalid username and password combination');
