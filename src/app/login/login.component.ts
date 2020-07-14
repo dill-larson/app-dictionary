@@ -43,12 +43,10 @@ export class LoginComponent implements OnInit {
             if(this.rememberMe) {
               localStorage.setItem("loggedInUser", user.email);
               localStorage.setItem("token", user.id); //user ID in database
-              console.log("Login component", localStorage.getItem("token"));
             }
             else {
               sessionStorage.setItem("loggedInUser", user.email);
               sessionStorage.setItem("token", user.id); //user ID in database
-              console.log("Login component", sessionStorage.getItem("token"));;
             }
             this.router.navigate(['']);
           }).unsubscribe();

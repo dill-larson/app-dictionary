@@ -91,4 +91,15 @@ export class UserService {
     );
     return user;
   }
+
+  logoutUser() {
+    var u = {
+      id: '',
+      name: '',
+      email: '',
+      password: '',
+      library: []
+    };
+    this.user.next(u);
+  }
 }

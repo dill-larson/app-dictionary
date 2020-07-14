@@ -35,14 +35,14 @@ export class TopNavigationComponent implements OnInit {
       }
     });
     
-    if(localStorage.getItem("loggedInUser") != '') {
-      //this.user.email = localStorage.getItem("loggedInUser");
-      this.user.id = localStorage.getItem("token");
-    }
-    else {
-      //this.user.email = sessionStorage.getItem("loggedInUser");
-      this.user.id = sessionStorage.getItem("token");
-    }
+    // if(localStorage.getItem("loggedInUser") != '') {
+    //   this.user.email = localStorage.getItem("loggedInUser");
+    //   this.user.id = localStorage.getItem("token");
+    // }
+    // else if ((sessionStorage.getItem("loggedInUser") != '')) {
+    //   this.user.email = sessionStorage.getItem("loggedInUser");
+    //   this.user.id = sessionStorage.getItem("token");
+    // }
   }
 
   search() {
@@ -52,6 +52,6 @@ export class TopNavigationComponent implements OnInit {
   logout() {
     localStorage.setItem("loggedInUser", '');
     sessionStorage.setItem("loggedInUser", '');
-    this.ngOnInit();
+    this.userService.logoutUser();
   }
 }

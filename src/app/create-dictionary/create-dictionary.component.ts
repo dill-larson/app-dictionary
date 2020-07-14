@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { DictionaryService } from '../services/dictionary.service';
+import { UserService } from '../services/user.service';
 import { Dictionary } from '../models/dictionary';
 import { User } from '../models/user';
 import { Views } from '../models/views.enum';
+
 
 @Component({
   selector: 'app-create-dictionary',
@@ -15,10 +17,17 @@ export class CreateDictionaryComponent implements OnInit {
   public dictionary: Dictionary;
   public user: User;
 
-  constructor(private router: Router, private dictionaryService: DictionaryService) {
+  constructor(private router: Router, private dictionaryService: DictionaryService, private userService: UserService) {
+    this.user = {
+      id: '',
+      name: '',
+      email: '',
+      password: '',
+      library: []
+    }
     this.dictionary = {
       name: '',
-      owner: this.user,
+      owner: this.user.id,
       view: Views.Public,
       tags: [],
       words: []
@@ -30,12 +39,17 @@ export class CreateDictionaryComponent implements OnInit {
   }
 
   getUser(): void {
-    if(localStorage.getItem("token") != '') {
-      this.user.id = localStorage.getItem("token");
-    }
-    else {
-      this.user.id = sessionStorage.getItem("token");
-    }
+    this.userService.currentUser.subscribe(user => {
+      if(user != null) {
+        this.user = user
+      }
+    });
+    // if(localStorage.getItem("token") != '') {
+    //   this.user.id = localStorage.getItem("token");
+    // }
+    // else {
+    //   this.user.id = sessionStorage.getItem("token");
+    // }
   }
 
   addDictionary() {
