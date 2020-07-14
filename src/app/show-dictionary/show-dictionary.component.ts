@@ -105,7 +105,7 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   buildUrl(word: String, format: String) {
-    const apiUrl = "http://words.bighugelabs.com/api/2"
+    const apiUrl = "https://words.bighugelabs.com/api/2"
     const key = "e75fe36f1596362791ae487561ac2e07"
     return apiUrl + "/" + key + "/" + word + "/" + format; 
   }
