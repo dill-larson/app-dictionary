@@ -22,6 +22,7 @@ import { ShowDictionaryComponent } from './show-dictionary/show-dictionary.compo
 
 import { UserService } from './services/user.service';
 import { DictionaryService } from './services/dictionary.service';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { DictionaryService } from './services/dictionary.service';
     CreateDictionaryComponent,
     SearchItemComponent,
     ProfileComponent,
-    ShowDictionaryComponent
+    ShowDictionaryComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
