@@ -22,6 +22,9 @@ export class ShowDictionaryComponent implements OnInit {
   public dictSize: Number;
   public checkboxArray: Array<Boolean>;
   public check: boolean;
+  public error: boolean;
+  public functionError: string;
+  public wordError: string;
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private dictionaryService: DictionaryService) {
     this.dictionary = {
@@ -43,6 +46,9 @@ export class ShowDictionaryComponent implements OnInit {
     this.checkboxArray = new Array<Boolean>();
     this.showSynonyms = false;
     this.check = false;
+    this.error = false;
+    this.wordError = '';
+    this.functionError = '';
   }
 
   ngOnInit(): void {
@@ -59,6 +65,8 @@ export class ShowDictionaryComponent implements OnInit {
       });
       this.dictionaryService.getWords(dictionaryID).subscribe(words => {
         this.dictionary.words = words as Word[];
+        this.initCheckboxArray();
+        this.initWordSynArrays();
       });
     }
   }
@@ -74,18 +82,19 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   getWordSynonyms(word: Word, wordFunc: string) {
-    this.showSynonyms = true;
     this.http.get(this.buildUrl(word.word, "json"))
       .subscribe((response) => { 
         try {
           this.wordSynonyms.set(word, response[wordFunc]["syn"]);
           this.calculateNumOfRows(word, this.wordSynonyms);
+          this.showSynonyms = true;
         }
         catch(TypeError) {
-          this.wordSynonyms.get(word).push("No");
-          this.wordSynonyms.get(word).push(wordFunc + " synonyms");
-          this.wordSynonyms.get(word).push("exist");
-          this.calculateNumOfRows(word, this.wordSynonyms);
+          this.functionError = wordFunc;
+          this.wordError = word.word;
+          this.error = true;
+          this.showSynonyms = false;
+          //this.calculateNumOfRows(word, this.wordSynonyms);
         }
       });
   }
@@ -130,13 +139,8 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   removeWord(word: Word) {
-    // this.dictService.removeWord(this.dictionary, word).subscribe(result =>{
-    //   if(result['status'] === 'success') {
-    //     //alert('Removed ' + word.word + ' from ' + this.dictionary.name);
-    //   } else {
-    //     alert('Unable to word from ' + this.dictionary.name);
-    //   }
-    // });
+    console.log(this.dictionary.id);
+    this.dictionaryService.deleteWord(this.dictionary.id, word);
 
     this.ngOnInit();
   }
@@ -144,16 +148,15 @@ export class ShowDictionaryComponent implements OnInit {
   addSyn(word: Word, syn: string) {
     this.addWord.word = syn;
     this.addWord.function = word.function;
-    // this.dictService.addWord(this.addWord, this.dictionary).subscribe(result =>{
-    //   console.log('result is ', result);
-    //   if(result['status'] === 'success') {
-    //     //alert('Added word to dictionary ' + this.dictionary.name);
-    //   } else {
-    //     //alert('Unable to word to dictionary ' + this.dictionary.name);
-    //   }
-    // });
+    this.dictionaryService.addWord(this.dictionary.id, this.addWord);
 
     this.ngOnInit();
+  }
+
+  closeError() {
+    this.wordError = '';
+    this.functionError = '';
+    this.error = false;
   }
 
 }

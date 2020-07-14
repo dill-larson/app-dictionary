@@ -13,6 +13,7 @@ export class DictionaryService {
   private dictionaryCollection: AngularFirestoreCollection<Dictionary>;
   //private dictionaries: Observable<Dictionary[]>;
   private dictionaryDoc: AngularFirestoreDocument<Dictionary>;
+  private wordDoc: AngularFirestoreDocument<Word>;
 
   constructor(private afs: AngularFirestore) {
     this.dictionaryCollection = this.afs.collection<Dictionary>('dictionaries');
@@ -51,7 +52,7 @@ export class DictionaryService {
     const dictionary = this.dictionaryDoc.snapshotChanges().pipe(
       map(actions => {
         const data = actions.payload.data() as Dictionary;
-        const id = actions.payload.data().id;
+        const id = dictionaryID;
         return { id, ...data };
       })
     );
@@ -61,7 +62,10 @@ export class DictionaryService {
 
   addWord(dictionaryID: string, word: Word) {
     const path = 'dictionaries/' + dictionaryID;
-    this.afs.doc(path).collection('words').add(word);
+    this.afs.doc(path).collection('words').doc(word.word).set({
+      word: word.word,
+      function: word.function
+    });
   }
 
   getWords(dictionaryID: string) { //: Observable<Word[]>
@@ -69,8 +73,12 @@ export class DictionaryService {
     this.dictionaryDoc = this.afs.doc(path);
     const words = this.dictionaryDoc.collection('words', ref => ref.orderBy('word', 'asc')).valueChanges();
 
-    words.subscribe(wordsArray => console.log(wordsArray));
-
     return words;
+  }
+
+  deleteWord(dictionaryID: string, word: Word) {
+    const path = 'dictionaries/' + dictionaryID + '/words/' + word.word;
+    this.wordDoc = this.afs.doc(path);
+    this.wordDoc.delete();
   }
 }

@@ -3,8 +3,8 @@
         <h3 class="h3 mb-3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictionary.words.length }} Words)</h3>
     </div>
 
-    <ngb-alert type="danger">
-        <strong>Error!</strong> [Function] synonyms do not exist for <strong>[Word]</strong>
+    <ngb-alert *ngIf="error" type="danger" (close)="closeError()">
+        <strong>Error!</strong> {{ functionError | titlecase }} synonyms do not exist for <strong>{{ wordError }}</strong>
     </ngb-alert>
 
     <button (click)="removeWords();" class="btn btn-primary">Remove Word(s)</button>
