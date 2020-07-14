@@ -9,5 +9,5 @@ export interface Dictionary {
     //moderators: User[];
     view: Views;
     tags: string[];
-    words: Word[];
+    words?: Word[];
 }

@@ -9,6 +9,8 @@ import { WordFunction } from '../models/word-function.enum';
 import { Dictionary } from '../models/dictionary';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
+import { UserService } from '../services/user.service';
+import { DictionaryService } from '../services/dictionary.service';
 
 @Component({
   selector: 'app-search-item',
@@ -20,7 +22,6 @@ export class SearchItemComponent implements OnInit {
 
   public user: User;
   public searchItem: string;
-  public library: String[];
   public nouns: String[];
   public verbs: String[];
   public arrayOfDict: Dictionary[];
@@ -28,10 +29,18 @@ export class SearchItemComponent implements OnInit {
   public word: Word;
   public dictionary: Dictionary;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) { //, private dictService: DictionaryService, private userService: UserService
-    this.word = new Word();
-    //this.dictionary = new Dictionary();
-    //this.user = new User();
+  constructor(private route: ActivatedRoute, private http: HttpClient, private userService: UserService, private dictionaryService: DictionaryService) {
+    this.user = {
+      id: '',
+      name: '',
+      email: '',
+      password: '',
+      library: []
+    }
+    this.word = {
+      word: '',
+      function: ''
+    };
   }
 
   ngOnInit(): void {
@@ -39,24 +48,20 @@ export class SearchItemComponent implements OnInit {
         this.searchItem = event.key;
     });
 
-    this.user.email = localStorage.getItem("loggedInUser");
-    this.getUser(this.user);
+    this.getUser();
     this.getSynonyms(this.searchItem);
-    this.getDictionary(this.searchItem);
   }
 
-  getUser(username: User) {
-    if(username) {
-      // this.userService.getUser(username).subscribe(result => {
-      //   if(result['status'] === 'success' && result['data'].length >= 1) {
-      //     this.library = result['data']['0']['library'];
-      //   } else {
-      //     alert('You are not logged in');
-      //   }
-      // }, error => {
-      //   console.log('error is ', error);
-      // });
-    }
+  getUser() {
+    this.userService.currentUser.subscribe(user => {
+      if(user != null) {
+        this.user = user;
+      }
+    }).unsubscribe();
+
+    this.dictionaryService.getDictionaries(this.user?.id).subscribe(dictionaries => {
+      this.user.library = dictionaries;
+    });
   }
 
   getSynonyms(word: String) {
@@ -73,18 +78,10 @@ export class SearchItemComponent implements OnInit {
     return apiUrl + "/" + key + "/" + word + "/" + format; 
   }
 
-  addWord(word: string, wordFunction: WordFunction, dict: string) {
+  addWord(word: string, wordFunction: string, dictionaryID: string) {
     this.word.word = word;
     this.word.function = wordFunction;
-    this.dictionary.name = dict;
-    // this.dictService.addWord(this.word, this.dictionary).subscribe(result =>{
-    //   console.log('result is ', result);
-    //   if(result['status'] === 'success') {
-    //     alert('Added word to dictionary ' + this.dictionary.name);
-    //   } else {
-    //     alert('Unable to word to dictionary ' + this.dictionary.name);
-    //   }
-    // });
+    this.dictionaryService.addWord(dictionaryID, this.word);
   }
 
   getDictionary(dict: String) {

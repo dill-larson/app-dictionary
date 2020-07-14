@@ -59,6 +59,11 @@ export class DictionaryService {
     return dictionary;
   }
 
+  addWord(dictionaryID: string, word: Word) {
+    const path = 'dictionaries/' + dictionaryID;
+    this.afs.doc(path).collection('words').add(word);
+  }
+
   getWords(dictionaryID: string) { //: Observable<Word[]>
     const path = 'dictionaries/' + dictionaryID;
     this.dictionaryDoc = this.afs.doc(path);

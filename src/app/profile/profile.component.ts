@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit {
         else {
           this.user = user;
         }
-      });
+      }).unsubscribe();
 
       this.dictionaryService.getDictionaries(id).subscribe(dictionaries => {
         this.user.library = dictionaries;

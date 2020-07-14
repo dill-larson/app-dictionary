@@ -32,7 +32,10 @@ export class ShowDictionaryComponent implements OnInit {
       tags: [],
       words: []
     }
-    this.addWord = new Word();
+    this.addWord = {
+      word: '',
+      function: ''
+    };
     this.wordSynonyms = new Map<Word, Array<String>>();
     this.numOfRows = new Map<Word, Array<Number>>();
     this.expandedRow = new Array<Boolean>().fill(false);

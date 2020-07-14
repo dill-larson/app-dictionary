@@ -29,8 +29,7 @@ export class CreateDictionaryComponent implements OnInit {
       name: '',
       owner: this.user.id,
       view: Views.Public,
-      tags: [],
-      words: []
+      tags: []
     }
   }
 
@@ -42,6 +41,7 @@ export class CreateDictionaryComponent implements OnInit {
     this.userService.currentUser.subscribe(user => {
       if(user != null) {
         this.user = user
+        this.dictionary.owner = user.id;
       }
     });
     // if(localStorage.getItem("token") != '') {
@@ -55,6 +55,7 @@ export class CreateDictionaryComponent implements OnInit {
   addDictionary() {
   	if(this.dictionary.name) {
       if(this.user.id != "") {
+        console.log(this.dictionary);
         this.dictionaryService.addDictionary(this.dictionary);
         //this.router.navigate(['/dictionary', this.dict.name]); TODO: How to get dictionary ID (maybe create it myself?)
       }
