@@ -47,7 +47,7 @@ export class SignUpComponent implements OnInit {
       if(this.user.password == this.confPassword) {
         this.userService.createUser(this.user.name, this.user.email, this.user.password)
         .then(() => {
-          this.router.navigate(['login']);
+          this.router.navigate(['/login']);
         })
         .catch(error => {
           this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
@@ -57,6 +57,9 @@ export class SignUpComponent implements OnInit {
         this.error.code = "Password Mismatch";
         this.error.message = "Password and confirm password did not match."
       }
+    } else {
+      this.error.code = "Invalid Input";
+      this.error.message = "Please enter a name, email, and password.";
     }
   }
   
