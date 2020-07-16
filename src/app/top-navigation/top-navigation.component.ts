@@ -1,57 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-top-navigation',
   templateUrl: './top-navigation.component.html',
   styleUrls: ['./top-navigation.component.css']
 })
-export class TopNavigationComponent implements OnInit {
-  public user: User;
+export class TopNavigationComponent implements OnInit, OnDestroy {
   public searchItem: String;
+  public user: User;
+  private userSubscription: Subscription;
 
-  constructor(private router: Router, private userService: UserService) {
+  constructor(private router: Router, public userService: UserService) {
     this.user = {
       id: '',
-      name: '',
-      email: '',
-      password: '',
-      library: []
+      email: ''
     }
   }
 
   ngOnInit(): void {
     this.searchItem = '';
-    this.getUser();
+    this.userSubscription = this.userService.user$.subscribe(user => this.user = user);
   }
 
-  getUser() {
-    this.userService.currentUser.subscribe(user => {
-      if(user != null) {
-        this.user = user;
-      }
-    });
-    
-    // if(localStorage.getItem("loggedInUser") != '') {
-    //   this.user.email = localStorage.getItem("loggedInUser");
-    //   this.user.id = localStorage.getItem("token");
-    // }
-    // else if ((sessionStorage.getItem("loggedInUser") != '')) {
-    //   this.user.email = sessionStorage.getItem("loggedInUser");
-    //   this.user.id = sessionStorage.getItem("token");
-    // }
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   }
 
   search() {
     this.router.navigate(['/search',this.searchItem]);
   } 
   
-  logout() {
-    localStorage.setItem("loggedInUser", '');
-    sessionStorage.setItem("loggedInUser", '');
-    this.userService.logoutUser();
+  signOut() {
+    this.userService.signOut();
   }
 }
