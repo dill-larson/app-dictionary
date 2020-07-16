@@ -3,12 +3,8 @@ import { Router } from '@angular/router';
 
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
+import { Error } from '../models/error';
 
-
-export interface Error {
-  code: string,
-  message: string,
-}
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
