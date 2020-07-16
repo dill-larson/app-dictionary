@@ -45,7 +45,7 @@ export class UserService {
       return error;
     });
     if(credential.user != undefined) {
-      return this.updateUserData(credential.user, name);
+      return this.createUserData(credential.user, name);
     }
     else {
       return new Promise((resolve, rejected) => 
@@ -74,7 +74,7 @@ export class UserService {
       return error;
     });
     if(credential.user != undefined) {
-      return this.updateUserData(credential.user);
+      return this.createUserData(credential.user);
     }
     else {
       return new Promise((resolve, rejected) => 
@@ -88,12 +88,25 @@ export class UserService {
     return this.router.navigate(['/']);
   }
 
-  private updateUserData(user, name?: string) {
+  private createUserData(user: firebase.User, name?: string) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+
+    var displayName: string = name ? name : user.displayName;
+
+    const data: User = {
+      id: user.uid,
+      name: displayName,
+      email: user.email
+    };
+
+    return userRef.set(data, { merge: true });
+  }
+
+  private updateUserData(user: firebase.User) {
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
 
     const data: User = {
       id: user.uid,
-      name: user.displayName || name,
       email: user.email
     };
 

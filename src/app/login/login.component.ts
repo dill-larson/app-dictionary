@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ResourceLoader } from '@angular/compiler'; //Why is this here?
 
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
@@ -31,6 +30,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.user.email = localStorage.getItem("userEmail");
     this.rememberMe = false;
   }
 
@@ -51,6 +51,11 @@ export class LoginComponent implements OnInit {
     if(this.validateUserInput()) {
       this.userService.emailSignin(this.user.email, this.user.password)
       .then(() => {
+        if(this.rememberMe) {
+          localStorage.setItem("userEmail", this.user.email);
+        } else {
+          localStorage.setItem("userEmail", '');
+        }
         this.router.navigate(['/']);
       })
       .catch(error => {
@@ -64,19 +69,14 @@ export class LoginComponent implements OnInit {
   }
 
   googleSignin() {
-    if(this.validateUserInput()) {
-      this.userService.googleSignin()
-      .then(() => {
-        this.router.navigate(['/']);
-      })
-      .catch(error => {
-        this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
-        this.error.message = error.message;
-      });
-    } else {
-      this.error.code = "Invalid Input";
-      this.error.message = "Please enter an email and password.";
-    }
+    this.userService.googleSignin()
+    .then(() => {
+      this.router.navigate(['/']);
+    })
+    .catch(error => {
+      this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
+      this.error.message = error.message;
+    });
   }
 
 }
