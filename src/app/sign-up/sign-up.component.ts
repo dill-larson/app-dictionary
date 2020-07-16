@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
 
+
+export interface Error {
+  code: string,
+  message: string,
+}
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -12,9 +17,15 @@ import { User } from '../models/user';
 export class SignUpComponent implements OnInit {
   public user : User;
   public confPassword : string;
-  
+  public error: Error;
+
   constructor(private router: Router, private userService: UserService) {
+    this.error = {
+      code: '',
+      message: ''
+    };
     this.user = {
+      id: '',
       name: '',
 	    email: '',
 	    password: '',
@@ -26,35 +37,31 @@ export class SignUpComponent implements OnInit {
     this.confPassword = '';
   }
 
+  closeError() {
+    this.error.code = '';
+    this.error.message = '';
+  }
+
   validateUserInput(): boolean {
     return this.user.name != '' && this.user.email != '' && this.user.password != '';
   }
 
-  validateEmail(email: String): boolean {
-		const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    	return re.test(String(email).toLowerCase());
+  createUser() {
+    if(this.validateUserInput()) {
+      if(this.user.password == this.confPassword) {
+        this.userService.createUser(this.user.name, this.user.email, this.user.password)
+        .then(() => {
+          this.router.navigate(['login']);
+        })
+        .catch(error => {
+          this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
+          this.error.message = error.message;
+        });
+      } else {
+        this.error.code = "Password Mismatch";
+        this.error.message = "Password and confirm password did not match."
+      }
+    }
   }
   
-  addUser() {
-  	if(this.validateUserInput()) {
-      if(this.validateEmail(this.user.email)) {
-        if(this.user.password == this.confPassword) {
-          if(this.userService.addUser(this.user)) { //
-            this.router.navigate(['/login']);
-          }
-          else {
-            alert('Unable to add user');
-          }
-        }
-        else {
-          alert('Password mismatch');
-        }
-      }
-      else {
-        alert(this.user.email + ' is not a valid email');
-      }
-  	} else {
-  		alert('Username, Email, and Password are required');
-  	}
-   }
 }

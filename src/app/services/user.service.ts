@@ -24,7 +24,7 @@ export class UserService {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if(user) {
-          return this.afs.doc<User>(`users/${user.id}`).valueChanges();
+          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
           return of(null);
         }
@@ -40,16 +40,28 @@ export class UserService {
     // );
   }
 
-  // async createUser(email: string, password: string) {
-  //   await this.afAuth.createUserWithEmailAndPassword(email, password).catch(function(error) {
-  //     console.error(error.code, error.message);
-  //   });
-  // }
+  async createUser(name: string, email: string, password: string) {
+    const credential: auth.UserCredential = await this.afAuth.createUserWithEmailAndPassword(email, password).catch(error => {
+      var code = error.code;
+      var errorMessage = error.message;
+      return error;
+    });
+    if(credential.user != undefined) {
+      console.log("Updating user in database", credential);
+      return this.updateUserData(credential.user, name);
+    }
+    else {
+      console.log("Returning error", credential);
+      return new Promise((resolve, rejected) => 
+        rejected(credential)
+      );
+    }
+  }
 
-  // async emailSignin(email: string, password: string) {
-  //   const provider = new auth.EmailAuthProvider();
-  //   const credential = await this.afAuth.signInWithEmailAndPassword(email, password);
-  // }
+  async emailSignin(email: string, password: string) {
+    const credential = await this.afAuth.signInWithEmailAndPassword(email, password);
+    return this.updateUserData(credential.user);
+  }
 
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
@@ -62,12 +74,12 @@ export class UserService {
     return this.router.navigate(['/']);
   }
 
-  private updateUserData(user) {
-    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`user/${user.id}`);
+  private updateUserData(user, name?: string) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
 
-    const data = {
-      id: user.id,
-      name: user.name,
+    const data: User = {
+      id: user.uid,
+      name: user.displayName || name,
       email: user.email
     };
 

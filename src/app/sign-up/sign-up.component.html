@@ -1,8 +1,15 @@
 <form class="form-signup">
+    <!--Title-->
     <div class="text-center mb-4">
         <h2 class="h2 mb-3 font-weight-normal">Sign Up</h2>
     </div>
 
+    <!--Error alert-->
+    <ngb-alert *ngIf="error?.code" type="danger" (close)="closeError()">
+        <strong>{{ error.code | titlecase }}:</strong> {{ error.message }}
+    </ngb-alert>
+
+    <!--Sign-Up Form-->
     <div class="form-label-group">
         <input name="name" [(ngModel)]="user.name" type="name" id="inputName" class="form-control" placeholder="Name" required autofocus>
         <label for="inputName">Name</label>
@@ -23,5 +30,5 @@
         <label for="inputConfPassowrd">Confirm password</label>
     </div>
 
-    <button class="btn btn-lg btn-primary btn-block" (click)="addUser();" type="submit">Sign Up</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="createUser()" type="submit">Sign Up</button>
 </form>
