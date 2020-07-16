@@ -1,8 +1,15 @@
 <form class="form-login">
+    <!--Title-->
     <div class="text-center mb-4">
         <h2 class="h2 mb-3 font-weight-normal">Log In</h2>
     </div>
 
+    <!--Error alert-->
+    <ngb-alert *ngIf="error?.code" type="danger" (close)="closeError()">
+        <strong>{{ error.code | titlecase }}:</strong> {{ error.message }}
+    </ngb-alert>
+
+    <!--Login Form-->
     <div class="form-label-group">
         <input name="email" [(ngModel)]="user.email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputEmail">Email address</label>
@@ -19,6 +26,12 @@
         </label>
     </div>
 
-    <button class="btn btn-lg btn-primary btn-block" (click)="validateLogin();" type="submit">Log In</button>
-    <button class="btn btn-lg btn-primary btn-block" (click)="googleSignin();" type="submit">Google</button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="emailSignin();" type="submit">Log In</button>
+    
+    <!--Other Sigin Options-->
+    <div class="google">
+        <a (click)="googleSignin();">
+            <img src="assets/google_signin_buttons/web/2x/btn_google_signin_light_normal_web@2x.png">
+        </a>
+    </div>
 </form>

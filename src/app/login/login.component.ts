@@ -4,6 +4,7 @@ import { ResourceLoader } from '@angular/compiler'; //Why is this here?
 
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
+import { Error } from '../models/error';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +12,15 @@ import { User } from '../models/user';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  public user : User;
+  public user: User;
+  public error: Error;
   public rememberMe: boolean;
 
   constructor(private router: Router, private userService: UserService) {
+    this.error = {
+      code: '',
+      message: ''
+    }
     this.user = {
       id: '',
       name: '',
@@ -32,36 +38,45 @@ export class LoginComponent implements OnInit {
     this.rememberMe = !this.rememberMe;
   }
 
+  closeError() {
+    this.error.code = '';
+    this.error.message = '';
+  }
+
   validateUserInput(): boolean {
     return this.user.email != '' && this.user.password != '';
   }
 
-  validateLogin() {
+  emailSignin() {
     if(this.validateUserInput()) {
-      this.userService.validateLogin(this.user).subscribe(user => {
-        if(user != null) {
-          this.userService.currentUser.subscribe(user => {
-            if(this.rememberMe) {
-              localStorage.setItem("loggedInUser", user.email);
-              localStorage.setItem("token", user.id); //user ID in database
-            }
-            else {
-              sessionStorage.setItem("loggedInUser", user.email);
-              sessionStorage.setItem("token", user.id); //user ID in database
-            }
-            this.router.navigate(['']);
-          }).unsubscribe();
-        }
-        else {
-          alert('Invalid username and password combination');
-        }
+      this.userService.emailSignin(this.user.email, this.user.password)
+      .then(() => {
+        this.router.navigate(['/']);
+      })
+      .catch(error => {
+        this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
+        this.error.message = error.message;
       });
     } else {
-        alert('Enter username and password');
+      this.error.code = "Invalid Input";
+      this.error.message = "Please enter an email and password";
     }
   }
 
   googleSignin() {
-    this.userService.googleSignin();
+    if(this.validateUserInput()) {
+      this.userService.googleSignin()
+      .then(() => {
+        this.router.navigate(['/']);
+      })
+      .catch(error => {
+        this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
+        this.error.message = error.message;
+      });
+    } else {
+      this.error.code = "Invalid Input";
+      this.error.message = "Please enter an email and password.";
+    }
   }
+
 }

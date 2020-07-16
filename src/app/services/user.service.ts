@@ -42,16 +42,12 @@ export class UserService {
 
   async createUser(name: string, email: string, password: string) {
     const credential: auth.UserCredential = await this.afAuth.createUserWithEmailAndPassword(email, password).catch(error => {
-      var code = error.code;
-      var errorMessage = error.message;
       return error;
     });
     if(credential.user != undefined) {
-      console.log("Updating user in database", credential);
       return this.updateUserData(credential.user, name);
     }
     else {
-      console.log("Returning error", credential);
       return new Promise((resolve, rejected) => 
         rejected(credential)
       );
@@ -59,14 +55,32 @@ export class UserService {
   }
 
   async emailSignin(email: string, password: string) {
-    const credential = await this.afAuth.signInWithEmailAndPassword(email, password);
-    return this.updateUserData(credential.user);
+    const credential: auth.UserCredential = await this.afAuth.signInWithEmailAndPassword(email, password).catch(error => {
+      return error;
+    });
+    if(credential.user != undefined) {
+      return this.updateUserData(credential.user);
+    }
+    else {
+      return new Promise((resolve, rejected) => 
+        rejected(credential)
+      );
+    }
   }
 
   async googleSignin() {
     const provider = new auth.GoogleAuthProvider();
-    const credential = await this.afAuth.signInWithPopup(provider);
-    return this.updateUserData(credential.user);
+    const credential: auth.UserCredential = await this.afAuth.signInWithPopup(provider).catch(error => {
+      return error;
+    });
+    if(credential.user != undefined) {
+      return this.updateUserData(credential.user);
+    }
+    else {
+      return new Promise((resolve, rejected) => 
+        rejected(credential)
+      );
+    }
   }
 
   async signOut() {
