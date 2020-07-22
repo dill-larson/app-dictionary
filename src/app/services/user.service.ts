@@ -14,10 +14,12 @@ import { Dictionary } from '../models/dictionary';
   providedIn: 'root'
 })
 export class UserService {
-  public user$: Observable<User>;
   private usersCollection: AngularFirestoreCollection<User>;
   private userDoc: AngularFirestoreDocument<User>;
   private user = new BehaviorSubject<User>(null);
+  public user$: Observable<User>;
+  
+  //Get rid of:
   public currentUser = this.user.asObservable();
 
   constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private router: Router) {
@@ -113,6 +115,7 @@ export class UserService {
     return userRef.set(data, { merge: true });
   }
 
+  //Delete everything below this line -------
   // getUsers() {
   //   return this.users;
   // }
