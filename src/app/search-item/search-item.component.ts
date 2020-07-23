@@ -1,40 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-//import { DictionaryService } from './dictionary.service';
-//import { UserService } from './user.service';
-//import { SynonymService } from '../search-item/synonym.service';
 import { Word } from '../models/word';
 import { WordFunction } from '../models/word-function.enum';
 import { Dictionary } from '../models/dictionary';
 import { User } from '../models/user';
-import { HttpClient } from '@angular/common/http';
+import { Error } from '../models/error';
+
 import { UserService } from '../services/user.service';
 import { DictionaryService } from '../services/dictionary.service';
+import { ThesaurusService } from '../services/thesaurus.service';
 
 @Component({
   selector: 'app-search-item',
   templateUrl: './search-item.component.html',
-  styleUrls: ['./search-item.component.css'],
-  providers: [  ] //DictionaryService, UserService
+  styleUrls: ['./search-item.component.css']
 })
-export class SearchItemComponent implements OnInit {
-
+export class SearchItemComponent implements OnInit, OnDestroy {
   public user: User;
   public searchItem: string;
-  public nouns: String[];
-  public verbs: String[];
-  public arrayOfDict: Dictionary[];
+  public nouns: string[];
+  public verbs: string[];
+  //public arrayOfDict: Dictionary[]; TODO add ability to search for dictionaries by name
 
+  public error: Error;
   public word: Word;
   public dictionary: Dictionary;
+  private userSubscription: Subscription;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private userService: UserService, private dictionaryService: DictionaryService) {
+  constructor(private route: ActivatedRoute, private userService: UserService, private dictionaryService: DictionaryService, private thesaurusService: ThesaurusService) {
+    this.error = {
+      code: '',
+      message: ''
+    }
     this.user = {
       id: '',
       name: '',
       email: '',
-      password: '',
       library: []
     }
     this.word = {
@@ -52,30 +55,46 @@ export class SearchItemComponent implements OnInit {
     this.getSynonyms(this.searchItem);
   }
 
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
+
   getUser() {
-    this.userService.currentUser.subscribe(user => {
-      if(user != null) {
-        this.user = user;
-      }
-    }).unsubscribe();
-
-    this.dictionaryService.getDictionaries(this.user?.id).subscribe(dictionaries => {
-      this.user.library = dictionaries;
+    this.userSubscription = this.userService.user$.subscribe(user => { 
+      this.user = user;
+      this.dictionaryService.getDictionaries(this.user.id).subscribe(dictionaries => {
+        console.log(dictionaries);
+        this.user.library = dictionaries;
+      });
     });
+    
   }
 
-  getSynonyms(word: String) {
-    return this.http.get(this.buildUrl(word, "json"))
-        .subscribe((response) => { 
-            this.nouns = response['noun']['syn'];
-            this.verbs = response['verb']['syn'];
-        });
-  }
-
-  buildUrl(word: String, format: String) {
-    const apiUrl = "https://words.bighugelabs.com/api/2"
-    const key = "e75fe36f1596362791ae487561ac2e07" //Steves: 3306ed5f2cd255658fab6cb62cccc82e
-    return apiUrl + "/" + key + "/" + word + "/" + format; 
+  getSynonyms(word: string): void {
+    this.thesaurusService.getSynonyms(word).then(response => {
+      let errorOrigin: string;
+      try {
+        errorOrigin = "Noun";
+        this.nouns = response["noun"]["syn"];
+        errorOrigin = "Verb";
+        this.verbs = response["verb"]["syn"];
+      } catch (error) {
+        if(error instanceof TypeError) {
+          //Noun or Verb synonyms do not exist
+          this.error.code = errorOrigin + " Synonyms Not Found";
+          this.error.message =  errorOrigin + " synonyms do not exist for this word.";
+        } else {
+          //All other errors
+          this.error.code = "Error";
+          this.error.message = error;
+        }
+      }
+    })
+    .catch(error => {
+      //Server-side errors
+      this.error.code = error.substring(0,14); //error code for server-side errors
+      this.error.message = error.substring(15); 
+    });
   }
 
   addWord(word: string, wordFunction: string, dictionaryID: string) {
@@ -84,6 +103,12 @@ export class SearchItemComponent implements OnInit {
     this.dictionaryService.addWord(dictionaryID, this.word);
   }
 
+  closeError() {
+    this.error.code = '';
+    this.error.message = '';
+  }
+
+  //TODO add ability to search dictionaries by name
   getDictionary(dict: String) {
     // this.dictionary.name = dict;
     // if(this.dictionary.name) {
