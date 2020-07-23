@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule }    from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS }    from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment.prod';
@@ -19,10 +19,13 @@ import { CreateDictionaryComponent } from './create-dictionary/create-dictionary
 import { SearchItemComponent } from './search-item/search-item.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ShowDictionaryComponent } from './show-dictionary/show-dictionary.component';
+import { FooterComponent } from './footer/footer.component';
 
 import { UserService } from './services/user.service';
 import { DictionaryService } from './services/dictionary.service';
-import { FooterComponent } from './footer/footer.component';
+import { ThesaurusService } from './services/thesaurus.service';
+
+import { HttpErrorInterceptor } from './services/http-error-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +52,13 @@ import { FooterComponent } from './footer/footer.component';
   ],
   providers: [
     UserService,
-    DictionaryService
+    DictionaryService,
+    ThesaurusService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
