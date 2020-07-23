@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 import { DictionaryService } from '../services/dictionary.service';
@@ -26,7 +26,7 @@ export class ShowDictionaryComponent implements OnInit {
   public functionError: string;
   public wordError: string;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private dictionaryService: DictionaryService) {
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService) {
     this.dictionary = {
       id: '',
       name: '',
@@ -158,6 +158,12 @@ export class ShowDictionaryComponent implements OnInit {
     this.wordError = '';
     this.functionError = '';
     this.error = false;
+  }
+
+  deleteDictionary() {
+    this.dictionaryService.deleteDictionary(this.dictionary.id)
+      .then(() => this.router.navigate(['/']))
+      .catch(error => console.error(error));
   }
 
 }
