@@ -6,38 +6,48 @@
                 <h3 class="h3 mb-3 font-weight-normal">Profile:</h3>
             </div>
 
+            <!--Error alert-->
+            <ngb-alert *ngIf="error?.code" type="danger" (close)="closeError()">
+                <strong>{{ error.code | titlecase }}:</strong> {{ error.message }}
+            </ngb-alert>
+
+            <!--Success alert-->
+            <ngb-alert *ngIf="false" type="success" (close)="closeAlert()">
+                <strong>{{ error.code | titlecase }}:</strong> {{ error.message }}
+            </ngb-alert>
+
             <!--Name-->
             <div class="form-label-group">
-                <input name="name" [(ngModel)]="user.name" type="name" id="inputName" class="form-control" placeholder="Name" value="{{ user.name }}">
+                <input name="name" [(ngModel)]="updateU.name" type="name" id="inputName" class="form-control" placeholder="Name" value="{{ user.name }}">
                 <label for="inputName">Name</label>
             </div>
             
             <!--Email-->
             <div class="form-label-group">
-                <input name="email" [(ngModel)]="user.email" type="email" id="inputEmail" class="form-control" placeholder="Email" value="{{ user.email }}">
+                <input name="email" [(ngModel)]="updateU.email" type="email" id="inputEmail" class="form-control" placeholder="Email" value="{{ user.email }}">
                 <label for="inputEmail">Email</label>
             </div>
 
             <!--New Password-->
             <div class="form-label-group">
-                <input name="newPass" type="password" id="inputNewPass" class="form-control" placeholder="New Password">
+                <input name="newPass" type="password" [(ngModel)]="updateU.password" id="inputNewPass" class="form-control" placeholder="New Password">
                 <label for="inputNewPass">New Password</label>
             </div>
 
             <!--Confirm New Password-->
             <div class="form-label-group">
-                <input name="newConfPass" type="password" id="inputNewConfPass" class="form-control" placeholder="Confirm New Password">
+                <input name="newConfPass" type="password" [(ngModel)]="confPassword" id="inputNewConfPass" class="form-control" placeholder="Confirm New Password">
                 <label for="inputNewConfPass">Confirm New Password</label>
             </div>
             
             <!--Old Password-->
             <div class="form-label-group">
-                <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Old Password">
+                <input name="password" type="password" [(ngModel)]="user.password" id="inputPassword" class="form-control" placeholder="Old Password">
                 <label for="inputPassword">Old Password</label>
             </div>
             
-            <button class="btn btn-lg btn-primary btn-block">Update</button>
-            <button class="btn btn-lg btn-danger btn-block">Delete</button>
+            <button class="btn btn-lg btn-primary btn-block" (click)="updateUser()">Update</button>
+            <button class="btn btn-lg btn-danger btn-block" (click)="deleteUser()">Delete</button>
         </div>
         <div class="col">
             <!--Title-->

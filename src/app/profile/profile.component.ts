@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { DictionaryService } from '../services/dictionary.service';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
+import { Error } from '../models/error';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
-
-  public userEmail: string;
+export class ProfileComponent implements OnInit, OnDestroy {
+  public confPassword: string;
   public user: User;
+  public updateU: User;
+  private userSubscription: Subscription;
+  public error: Error;
 
   constructor(private route: ActivatedRoute, private router: Router, private userService: UserService, private dictionaryService: DictionaryService) {
     this.user = {
@@ -22,7 +26,17 @@ export class ProfileComponent implements OnInit {
       email: '',
       password: '',
       library: []
-    }
+    };
+    this.updateU = {
+      id: '',
+      name: '',
+      email: '',
+      password: ''
+    };
+    this.error = {
+      code: '',
+      message: ''
+    };
   }
 
   ngOnInit(): void {
@@ -31,20 +45,94 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
+
+  closeError() {
+    this.error.code = '';
+    this.error.message = '';
+  }
+
+  closeAlert() {
+    //TODO
+  }
+
   getUser(id: string) {
     if(id != '') {
-      this.userService.getUser(id).subscribe(user => {
+      this.userSubscription = this.userService.getUser(id).subscribe(user => {
         if(user == null) {
           this.router.navigate(['**']);
         }
         else {
           this.user = user;
+          this.updateU = {
+            ...this.user
+          };
+          this.dictionaryService.getDictionaries(id).subscribe(dictionaries => {
+            this.user.library = dictionaries;
+          });
         }
-      }).unsubscribe();
-
-      this.dictionaryService.getDictionaries(id).subscribe(dictionaries => {
-        this.user.library = dictionaries;
       });
+    }
+  }
+
+  deleteUser() {
+    this.userService.deleteUser()
+      .then(() =>
+        this.router.navigate(['/'])
+      )
+      .catch(error => {
+        this.error.code = error.code;
+        this.error.message = error.message;
+      });
+  }
+
+  updateUser() {
+    if(this.user.password) {
+      this.userService.reauthenticateUser(this.user.password)
+        .then(() => {
+          if(this.updateU.name != this.user.name) {
+            console.log("Updating name...");
+            this.userService.updateUser(this.updateU.name)
+              .catch(error => {
+                this.error.code = error.code;
+                this.error.message = error.message;
+              });
+          }
+          if(this.updateU.email != this.user.email) {
+            console.log("Updating email...");
+            this.userService.updateUserEmail(this.updateU.email)
+              .catch(error => {
+                this.error.code = error.code;
+                this.error.message = error.message;
+              });
+          }
+          if(this.updateU.password) {
+            if(this.updateU.password == this.confPassword) {
+              this.userService.updateUserPassword(this.updateU.email)
+              .catch(error => {
+                this.error.code = error.code;
+                this.error.message = error.message;
+              });
+            } else {
+              this.error.code = "Password Mistach";
+              this.error.message = "New password and confirm password do not match."
+            }
+          }
+
+          //Clear any passwords
+          this.updateU.password = "";
+          this.confPassword = "";
+          this.user.password = "";
+        })
+        .catch(error => {
+          this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
+          this.error.message = error.message;
+        });
+    } else {
+      this.error.code = "Invalid Password";
+      this.error.message = "Old password is needed to update user profile."
     }
   }
 
