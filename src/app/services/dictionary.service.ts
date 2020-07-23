@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, CollectionReference } from '@angular/fire/firestore';
-import { Observable, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Dictionary } from '../models/dictionary';
 import { Word } from '../models/word';
@@ -27,7 +27,15 @@ export class DictionaryService {
   }
 
   addDictionary(dictionary: Dictionary) {
-    this.dictionaryCollection.add(dictionary);
+    return this.dictionaryCollection.add(dictionary);
+  }
+
+  deleteDictionaries(userID: string): void {
+    this.afs.collection('dictionaries', ref => ref.where('owner', '==', userID)).get().subscribe(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        doc.ref.delete();
+      });
+    });
   }
 
   deleteDictionary(dictionaryID: string) {
@@ -36,6 +44,7 @@ export class DictionaryService {
     this.dictionaryDoc.delete(); //TODO: delete subcollection 'words'
   }
 
+  //TODO order by name
   getDictionaries(userID: string): Observable<Dictionary[]> {
     return this.afs.collection('dictionaries', ref => ref.where('owner', '==', userID)).snapshotChanges().pipe(
       map(actions => actions.map(a => {
