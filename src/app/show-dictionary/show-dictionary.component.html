@@ -10,8 +10,8 @@
         <strong>Error!</strong> {{ functionError | titlecase }} synonyms do not exist for <strong>{{ wordError }}</strong>
     </ngb-alert>
 
-    <button (click)="removeWords();" class="btn btn-primary">Remove Word(s)</button>
-    <button class="btn btn-danger">Delete Dictionary</button>
+    <button class="btn btn-primary" (click)="removeWords()">Remove Word(s)</button>
+    <button class="btn btn-danger" (click)="deleteDictionary()">Delete Dictionary</button>
 
     <table class="table">
         <thead>
