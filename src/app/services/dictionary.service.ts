@@ -41,7 +41,7 @@ export class DictionaryService {
   deleteDictionary(dictionaryID: string) {
     const path = 'dictionaries/' + dictionaryID;
     this.dictionaryDoc = this.afs.doc(path);
-    this.dictionaryDoc.delete(); //TODO: delete subcollection 'words'
+    return this.dictionaryDoc.delete(); //TODO: delete subcollection 'words'
   }
 
   //TODO order by name
