@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, CollectionReference } from '@angular/fire/firestore';
-import { Observable, of ,BehaviorSubject, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 
 import { User } from '../models/user';
-import { Dictionary } from '../models/dictionary';
-
+import { DictionaryService } from './dictionary.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +15,9 @@ import { Dictionary } from '../models/dictionary';
 export class UserService {
   private usersCollection: AngularFirestoreCollection<User>;
   private userDoc: AngularFirestoreDocument<User>;
-  private user = new BehaviorSubject<User>(null);
   public user$: Observable<User>;
   
-  //Get rid of:
-  public currentUser = this.user.asObservable();
-
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private router: Router) {
+  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth, private router: Router, private dictionaryService: DictionaryService) {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if(user) {
@@ -32,14 +27,8 @@ export class UserService {
         }
       })
     );
+    
     this.usersCollection = this.afs.collection<User>('users');
-    // this.users = this.usersCollection.snapshotChanges().pipe(
-    //   map(actions => actions.map(a => {
-    //     const data = a.payload.doc.data() as User;
-    //     const id = a.payload.doc.id;
-    //     return { id, ...data };
-    //   }))
-    // );
   }
 
   async createUser(name: string, email: string, password: string) {
@@ -54,6 +43,38 @@ export class UserService {
         rejected(credential)
       );
     }
+  }
+
+  async deleteUser() {
+    var user = this.afAuth.currentUser;
+    return user.then(user => {
+      this.deleteUserData(user);
+      return user.delete();
+    });
+  }
+
+  //TODO
+  async updateUser(name: string) {
+    var user = this.afAuth.currentUser;
+    return user.then(user => {
+      return user.updateProfile({displayName: name})
+        .then(() => {return this.updateUserData(user)});
+    });
+  }
+
+  //TODO
+  async updateUserEmail(email: string) {
+    var user = this.afAuth.currentUser;
+    return user.then(user => {
+      user.updateEmail(email);
+      return this.updateUserData(user);
+    });
+  }
+
+  //TODO
+  async updateUserPassword(password: string) {
+    var user = this.afAuth.currentUser;
+    return (await user).updatePassword(password);
   }
 
   async emailSignin(email: string, password: string) {
@@ -83,6 +104,18 @@ export class UserService {
         rejected(credential)
       );
     }
+  }
+
+  async reauthenticateUser(password: string) {
+    var user = this.afAuth.currentUser;
+    
+    return user.then(user => {
+      var credential = auth.EmailAuthProvider.credential(
+        user.email,
+        password
+      );
+      return user.reauthenticateWithCredential(credential);
+    });
   }
 
   async signOut() {
@@ -115,79 +148,15 @@ export class UserService {
     return userRef.set(data, { merge: true });
   }
 
-  //Delete everything below this line -------
-  // getUsers() {
-  //   return this.users;
-  // }
-
-  addUser(user: User): boolean {
-    try {
-      this.usersCollection.add(user)
-      return true;
-    }
-    catch(err) {
-      console.error(err);
-      return false;
-    }
+  private deleteUserData(user: firebase.User) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+    this.dictionaryService.deleteDictionaries(user.uid);
+    return userRef.delete();
   }
 
-  updateUser(user: User) {
-    const path = 'users/' + user.id;
-    this.userDoc = this.afs.doc(path);
-    this.userDoc.update(user);
-  }
-
-  deleteUser(user: User) {
-    const path = 'users/' + user.id;
-    this.userDoc = this.afs.doc(path);
-    this.userDoc.delete();
-  }
-
-  validateLogin(user: User): Observable<User> {
-    var userSubject = new Subject<User>();
-
-    const retrievedUsers = this.afs.collection('users', ref => ref.where('email', '==', user.email).where('password', '==', user.password))
-      .get()
-      .pipe(map((item:firebase.firestore.QuerySnapshot) => {
-        return item.docs.map((dataItem: firebase.firestore.QueryDocumentSnapshot) => {
-          const data = dataItem.data() as User;
-          const id = dataItem.id;
-          return {id, ...data};
-        });
-      }));
-
-    retrievedUsers.subscribe(users => {
-      if(users.length >= 1) {
-        this.user.next(users[0]);
-      }
-      userSubject.next(users[0]);
-    });
-
-    return userSubject.asObservable();
-  }
-
-  getUser(id: string): Observable<User> {
+  public getUser(id: string): Observable<User> {
     const path = 'users/' + id;
     this.userDoc = this.afs.doc(path);
-    const user = this.userDoc.snapshotChanges().pipe(
-      map(actions => {
-        const data = actions.payload.data() as User;
-        const id = actions.payload.data().id;
-        this.user.next({ id, ...data });
-        return { id, ...data };
-      })
-    );
-    return user;
-  }
-
-  logoutUser() {
-    var u = {
-      id: '',
-      name: '',
-      email: '',
-      password: '',
-      library: []
-    };
-    this.user.next(u);
+    return this.userDoc.valueChanges();
   }
 }
