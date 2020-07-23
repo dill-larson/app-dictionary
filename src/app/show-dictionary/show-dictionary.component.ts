@@ -149,6 +149,7 @@ export class ShowDictionaryComponent implements OnInit {
     this.addWord.word = syn;
     this.addWord.function = word.function;
     this.dictionaryService.addWord(this.dictionary.id, this.addWord);
+    this.showSynonyms = false;
 
     this.ngOnInit();
   }
