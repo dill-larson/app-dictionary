@@ -49,10 +49,10 @@ export class SearchItemComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe(event => {
         this.searchItem = event.key;
+        this.getSynonyms(this.searchItem);
     });
 
     this.getUser();
-    this.getSynonyms(this.searchItem);
   }
 
   ngOnDestroy(): void {
@@ -63,7 +63,6 @@ export class SearchItemComponent implements OnInit, OnDestroy {
     this.userSubscription = this.userService.user$.subscribe(user => { 
       this.user = user;
       this.dictionaryService.getDictionaries(this.user.id).subscribe(dictionaries => {
-        console.log(dictionaries);
         this.user.library = dictionaries;
       });
     });
@@ -71,16 +70,38 @@ export class SearchItemComponent implements OnInit, OnDestroy {
   }
 
   getSynonyms(word: string): void {
+    //Clear synonyms from previous search requests
+    this.nouns = null;
+    this.verbs = null;
+
+    //Get synonyms
     this.thesaurusService.getSynonyms(word).then(response => {
       let errorOrigin: string;
       try {
-        errorOrigin = "Noun";
         this.nouns = response["noun"]["syn"];
-        errorOrigin = "Verb";
+      } catch (error) {
+        if(error instanceof TypeError) {
+          //Noun synonyms do not exist
+          errorOrigin = "Noun";
+          this.error.code = errorOrigin + " Synonyms Not Found";
+          this.error.message =  errorOrigin + " synonyms do not exist for this word.";
+        } else {
+          //All other errors
+          this.error.code = "Error";
+          this.error.message = error;
+        }
+      }
+      try {
         this.verbs = response["verb"]["syn"];
       } catch (error) {
         if(error instanceof TypeError) {
-          //Noun or Verb synonyms do not exist
+          //Noun & Verb synonyms do not exist
+          if(errorOrigin == "Noun") {
+            errorOrigin += " & Verb"
+          } else {
+            //Verb synonyms do not exist
+            errorOrigin = "Verb";
+          }
           this.error.code = errorOrigin + " Synonyms Not Found";
           this.error.message =  errorOrigin + " synonyms do not exist for this word.";
         } else {
