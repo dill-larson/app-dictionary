@@ -63,7 +63,7 @@
                     <!--Collapse button-->
                     <td>
                         <!--Shows only when more than three synonyms-->
-                        <span class="collapse-synonyms" *ngIf="wordSynonyms.get(word).length > 3" (click)="expandedRow[i] = !expandedRow[i]">+</span>
+                        <span class="collapse-synonyms" *ngIf="wordSynonyms.get(word).length > 3" (click)="expandRow(i)">+</span>
                     </td>
                 </ng-container>
             </tr>

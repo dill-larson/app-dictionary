@@ -41,7 +41,7 @@ export class ShowDictionaryComponent implements OnInit {
     };
     this.wordSynonyms = new Map<Word, Array<String>>();
     this.numOfRows = new Map<Word, Array<Number>>();
-    this.expandedRow = new Array<Boolean>().fill(false);
+    this.expandedRow = new Array<Boolean>();
     this.wordsToRemove = new Set<Word>();
     this.checkboxArray = new Array<Boolean>();
     this.showSynonyms = false;
@@ -77,7 +77,14 @@ export class ShowDictionaryComponent implements OnInit {
     }
   }
 
+  expandRow(index: number) {
+    this.expandedRow[index] = !this.expandedRow[index];
+  }
+
   hideSynonyms() {
+    for(let index = 0; index < this.expandedRow.length; ++index) {
+      this.expandedRow[index] = false;
+    }
     this.showSynonyms = false;
   }
 
@@ -122,6 +129,7 @@ export class ShowDictionaryComponent implements OnInit {
   initCheckboxArray() {
     for(let word of this.dictionary.words) {
       this.checkboxArray.push(false);
+      this.expandedRow.push(false);
     }
   }
 
