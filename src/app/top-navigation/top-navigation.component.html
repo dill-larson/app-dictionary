@@ -5,9 +5,15 @@
     <li [ngbNavItem]="2" class="nav-item">
         <a ngbNavLink class="nav-link" routerLink="./create-dictionary">Create Dictionary</a>
     </li>
-    <form (keyup.enter)="search()" class="form-inline my-2 my-lg-0 mr-auto">
+    <form (keyup.enter)="search()" class="form-inline my-2 my-lg-0">
         <input name="search-item" [(ngModel)]="searchItem" type="text" class="form-control" type="search" placeholder="Search">
     </form>
+    <li *ngIf="user?.email != null" ngbDropdown class="nav-item mr-auto">
+        <a href (click)="false" class="nav-link" ngbDropdownToggle>Dictionaries</a>
+        <div ngbDropdownMenu>
+            <button ngbDropdownItem *ngFor="let dictionary of user.library" [routerLink]="['/dictionary', dictionary.id]">{{ dictionary.name }}</button>
+        </div>
+    </li>
     <li *ngIf="user?.email == null" [ngbNavItem]="3" class="nav-item">
         <a ngbNavLink routerLink="./signup">Sign Up</a>
     </li>
