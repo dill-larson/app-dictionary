@@ -4,7 +4,7 @@
         <p *ngIf="user == null">Login and create your own dictionary by clicking <b><a routerLink="./create-dictionary" routerLinkActive="active">Create Dictionary</a></b>!</p>
 
         <!--Dictionary Cards-->
-        <ng-container *ngFor="let iterations of length; index as i">
+        <!-- <ng-container *ngFor="let iterations of length; index as i">
             <div class="card-deck mb-4">
                 <div *ngFor="let dictionary of user.library.slice(0+i*4, 4+i*4)" class="card">
                     <h5 class="card-header">{{ dictionary.name }}</h5>
@@ -15,6 +15,6 @@
                     </div>
                 </div>
             </div>
-        </ng-container>
+        </ng-container> -->
     </div>
 </main>
