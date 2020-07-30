@@ -14,7 +14,7 @@
             <button ngbDropdownItem *ngFor="let dictionary of user.library" [routerLink]="['/dictionary', dictionary.id]">{{ dictionary.name }}</button>
         </div>
     </li>
-    <li *ngIf="user?.email == null" [ngbNavItem]="3" class="nav-item">
+    <li *ngIf="user?.email == null" [ngbNavItem]="3" class="nav-item ml-auto">
         <a ngbNavLink routerLink="./signup">Sign Up</a>
     </li>
     <li *ngIf="user?.email == null" [ngbNavItem]="4" class="nav-item">
