@@ -35,8 +35,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
-    this.dictionarySubscrition.unsubscribe();
+    if(this.userSubscription != null) {
+      this.userSubscription.unsubscribe();
+    }
+    if(this.dictionarySubscrition != null) {
+      this.dictionarySubscrition.unsubscribe();
+    }
   }
 
   getUserLibrary(user: User) {
