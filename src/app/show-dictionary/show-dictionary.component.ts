@@ -54,8 +54,8 @@ export class ShowDictionaryComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(event => {
       this.dictionary.id = event.dict;
+      this.getDictionary(this.dictionary.id);
      });
-    this.getDictionary(this.dictionary.id);
   }
 
   getDictionary(dictionaryID: string) {
