@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
 import { DictionaryService } from '../services/dictionary.service';
@@ -19,7 +20,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription;
   public error: Error;
 
-  constructor(private route: ActivatedRoute, private router: Router, private userService: UserService, private dictionaryService: DictionaryService) {
+  constructor(private route: ActivatedRoute, private router: Router, private userService: UserService, private dictionaryService: DictionaryService, private modalService: NgbModal) {
     this.user = {
       id: '',
       name: '',
@@ -47,6 +48,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
+  }
+
+  open(content) {
+    if(this.user.password) {
+      this.userService.reauthenticateUser(this.user.password)
+      .then(() => {
+        this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+          if(result = "delete") {
+            this.deleteUser();
+          }
+        });
+      })
+      .catch(error => {
+        this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/
+        this.error.message = error.message;
+      });
+    } else {
+      this.error.code = "Invalid Password";
+      this.error.message = "Old password is needed to delete user profile."
+    }
   }
 
   closeError() {
