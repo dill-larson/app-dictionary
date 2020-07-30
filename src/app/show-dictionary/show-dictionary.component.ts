@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { DictionaryService } from '../services/dictionary.service';
 import { Dictionary } from '../models/dictionary';
@@ -26,7 +27,7 @@ export class ShowDictionaryComponent implements OnInit {
   public functionError: string;
   public wordError: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService) {
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, private modalService: NgbModal) {
     this.dictionary = {
       id: '',
       name: '',
@@ -69,6 +70,14 @@ export class ShowDictionaryComponent implements OnInit {
         this.initWordSynArrays();
       });
     }
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      if(result = "delete") {
+        this.deleteDictionary();
+      }
+    });
   }
 
   initWordSynArrays() {
