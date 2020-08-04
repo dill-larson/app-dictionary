@@ -18,6 +18,7 @@ export class CreateDictionaryComponent implements OnInit, OnDestroy {
   public dictionary: Dictionary;
   public error: Error;
   public user: User;
+  public tags: string;
   private userSubscription: Subscription;
 
   constructor(private router: Router, private dictionaryService: DictionaryService, public userService: UserService) {
@@ -55,6 +56,8 @@ export class CreateDictionaryComponent implements OnInit, OnDestroy {
   addDictionary() {
   	if(this.dictionary.name) {
       if(this.user.id != "") {
+        this.separateTags();
+        console.log(this.dictionary.tags);
         this.dictionaryService.addDictionary(this.dictionary).then(document => {
           this.dictionary.id = document.id
           this.router.navigate(['/dictionary', this.dictionary.id]);
@@ -64,6 +67,13 @@ export class CreateDictionaryComponent implements OnInit, OnDestroy {
       this.error.code = "Missing Name";
       this.error.message = "Dictionary creation requires a name to be specified.";
   	}
+  }
+
+  separateTags() {
+    if(this.tags == undefined) {
+      return;
+    }
+    this.dictionary.tags = this.tags.split(",");
   }
 
   closeError() {
