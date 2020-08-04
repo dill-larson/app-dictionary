@@ -44,15 +44,18 @@ export class DictionaryService {
     return this.dictionaryDoc.delete(); //TODO: delete subcollection 'words'
   }
 
-  //TODO order by name
-  getDictionaries(userID: string): Observable<Dictionary[]> {
-    return this.afs.collection('dictionaries', ref => ref.where('owner', '==', userID)).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as Dictionary;
-        const id = a.payload.doc.id;
-        return { id, ...data };
-      }))
-    );
+  getDictionaries(userID: string): Promise<Dictionary[]> {
+    return this.afs.collection('dictionaries').ref.where('owner', '==', userID).orderBy('name')
+      .get()
+      .then(querySnapshot => {
+        var dictionaries = new Array<Dictionary>();
+        querySnapshot.forEach(document => {
+          const data = document.data() as Dictionary;
+          const id = document.id;
+          dictionaries.push({ id, ...data });
+        });
+        return dictionaries;
+      })
   }
 
   getDictionary(dictionaryID: string): Observable<Dictionary> {
@@ -75,6 +78,11 @@ export class DictionaryService {
       word: word.word,
       function: word.function
     });
+    this.afs.doc(path).collection('words').get().subscribe(querySnapshot => {
+      this.afs.collection('dictionaries').doc(dictionaryID).update({
+        "size": querySnapshot.size
+      })
+    });
   }
 
   getWords(dictionaryID: string) { //: Observable<Word[]>
@@ -89,5 +97,10 @@ export class DictionaryService {
     const path = 'dictionaries/' + dictionaryID + '/words/' + word.word;
     this.wordDoc = this.afs.doc(path);
     this.wordDoc.delete();
+    this.afs.doc(path).collection('words').get().subscribe(querySnapshot => {
+      this.afs.collection('dictionaries').doc(dictionaryID).update({
+        "size": querySnapshot.size
+      })
+    });
   }
 }
