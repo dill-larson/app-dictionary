@@ -7,6 +7,7 @@ export interface Dictionary {
     owner: string; //user id
 	//admins: User[];
     //moderators: User[];
+    size: number;
     view: Views;
     tags: string[];
     words?: Word[];
