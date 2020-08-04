@@ -16,7 +16,6 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
   public searchItem: String;
   public user: User;
   private userSubscription: Subscription;
-  private dictionarySubscription: Subscription;
 
   constructor(private router: Router, private userService: UserService, private dictionaryService: DictionaryService) {
     this.user = {
@@ -36,12 +35,11 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
-    this.dictionarySubscription.unsubscribe();
   }
 
   getUserLibrary(user: User) {
     if(user?.id != null) {
-      this.dictionarySubscription = this.dictionaryService.getDictionaries(user.id).subscribe(dictionaries => {
+      this.dictionaryService.getDictionaries(user.id).then(dictionaries => {
         this.user.library = dictionaries;
       });
     }

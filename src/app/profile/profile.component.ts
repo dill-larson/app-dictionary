@@ -90,7 +90,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.updateU = {
             ...this.user
           };
-          this.dictionaryService.getDictionaries(id).subscribe(dictionaries => {
+          this.dictionaryService.getDictionaries(id).then(dictionaries => {
             this.user.library = dictionaries;
           });
         }

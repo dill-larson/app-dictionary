@@ -62,7 +62,7 @@ export class SearchItemComponent implements OnInit, OnDestroy {
   getUser() {
     this.userSubscription = this.userService.user$.subscribe(user => { 
       this.user = user;
-      this.dictionaryService.getDictionaries(this.user.id).subscribe(dictionaries => {
+      this.dictionaryService.getDictionaries(this.user.id).then(dictionaries => {
         this.user.library = dictionaries;
       });
     });
