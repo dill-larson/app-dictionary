@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getUserLibrary(user: User) {
     if(user?.id != null) {
-      this.dictionaryService.testGetDictionaries(user.id).then(dictionaries => {
+      this.dictionaryService.getDictionaries(user.id).then(dictionaries => {
         this.user.library = dictionaries;
         //TODO: Find a better solution of displaying cards
         this.length = new Array<number>(Math.ceil(dictionaries.length/4));
