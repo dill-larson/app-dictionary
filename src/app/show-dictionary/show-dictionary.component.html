@@ -1,94 +1,98 @@
 <div class="container">
-    <div class="text-left mb-4">
-        <h3 class="h3 mb-3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictionary.words?.length }} Words)</h3>
+    <div class="text-left mb-1">
+        <h3 class="h3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictionary.words?.length }} Words)</h3>
     </div>
-</div>
 
-<div *ngIf="dictionary.words?.length > 0; else noWords" class="container">
+    <ng-container *ngIf="dictionary.words?.length > 0; else noWords">
 
-    <ngb-alert *ngIf="error" type="danger" (close)="closeError()">
-        <strong>Error!</strong> {{ functionError | titlecase }} synonyms do not exist for <strong>{{ wordError }}</strong>
-    </ngb-alert>
+        <div class="mb-1">
+            <span class="badge badge-pill badge-secondary mr-1" *ngFor="let tag of dictionary.tags">{{ tag }}</span>
+        </div>
 
-    <button class="btn btn-primary" (click)="removeWords()">Remove Word(s)</button>
-    <button class="btn btn-danger" (click)="open(deleteModal)">Delete Dictionary</button>
+        <ngb-alert *ngIf="error" type="danger" (close)="closeError()">
+            <strong>Error!</strong> {{ functionError | titlecase }} synonyms do not exist for <strong>{{ wordError }}</strong>
+        </ngb-alert>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scole="col" class="remove-col">
-                    <input type="checkbox" [(ngModel)]="check" (change)="toggleCheckboxes()" [checked]=false>
-                </th>
-                <th scope="col">Word</th>
-                <th scope="col" *ngIf="showSynonyms">Synonyms</th> <!--Column for 2st synonym-->
-                <th scope="col" *ngIf="showSynonyms"></th> <!--Column for 2nd synonym-->
-                <th scope="col" *ngIf="showSynonyms"></th> <!--Column for 3rd synonym-->
-                <th scope="col" *ngIf="showSynonyms"></th> <!--Column for collapse button-->
-            </tr>
-        </thead>
+        <button class="btn btn-primary" (click)="removeWords()">Remove Word(s)</button>
+        <button class="btn btn-danger" (click)="open(deleteModal)">Delete Dictionary</button>
 
-        <tbody *ngFor="let word of dictionary.words; index as i">
-            <tr>
-                <!--Checkbox-->
-                <td scope="col" class="remove-col">
-                    <input type="checkbox" [(ngModel)]="checkboxArray[i]" (change)="addWordToRemove(word)">
-                </td>
-                <!--Word-->
-                <td scope="col">
-                    <div ngbDropdown>
-                        <span id="dropdownBasic1" ngbDropdownToggle>{{ word.word | titlecase }}</span>
-                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                            <button ngbDropdownItem (click)="removeWord(word)">Remove</button>
-                            <button ngbDropdownItem (click)="getWordSynonyms(word, 'noun')">Show Noun Synonyms</button>
-                            <button ngbDropdownItem (click)="getWordSynonyms(word, 'verb')">Show Verb Synonyms</button>
-                            <button ngbDropdownItem (click)="hideSynonyms()">Hide Synonyms</button>
-                        </div>
-                    </div>
-                </td>                
-                <!--Synonyms-->
-                <ng-container *ngIf="showSynonyms">
-                    <ng-container *ngFor="let syn of wordSynonyms.get(word).slice(0,3)">
-                        <td scope="col">
-                            <div ngbDropdown>
-                                <span  id="dropdownBasic1" ngbDropdownToggle>{{ syn | titlecase }}</span>
-                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                    <button ngbDropdownItem (click)="addSyn(word, syn)">Add</button>
-                                </div>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <td *ngIf="wordSynonyms.get(word).slice(0,3).length <= 0"></td>
-                    <td *ngIf="wordSynonyms.get(word).slice(0,3).length <= 1"></td>
-                    <td *ngIf="wordSynonyms.get(word).slice(0,3).length <= 2"></td>
-                    <!--Collapse button-->
-                    <td>
-                        <!--Shows only when more than three synonyms-->
-                        <span class="collapse-synonyms" *ngIf="wordSynonyms.get(word).length > 3" (click)="expandRow(i)">+</span>
-                    </td>
-                </ng-container>
-            </tr>
-            <!--Collapsible synonym row-->
-            <ng-container *ngIf="expandedRow[i]">
-                <tr *ngFor="let row of numOfRows.get(word); index as j">
-                    <td></td> <!--Place holder for checkbox-->
-                    <td></td> <!--Place holder for Word-->
-                    <ng-container *ngFor="let syn of wordSynonyms.get(word).slice(3+(3*j),6+(3*j))">
-                        <td>
-                            <div ngbDropdown>
-                                <span  id="dropdownBasic1" ngbDropdownToggle>{{ syn | titlecase }}</span>
-                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                <button ngbDropdownItem (click)="addSyn(word, syn)">Add</button>
-                                </div>
-                            </div>
-                        </td>
-                    </ng-container>
-                    <td *ngIf="wordSynonyms.get(word).slice(3+(3*j),6+(3*j)).length <= 1"></td>
-                    <td *ngIf="wordSynonyms.get(word).slice(3+(3*j),6+(3*j)).length <= 2"></td>
-                    <td></td> <!--Place holder for collapse btn-->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scole="col" class="remove-col">
+                        <input type="checkbox" [(ngModel)]="check" (change)="toggleCheckboxes()" [checked]=false>
+                    </th>
+                    <th scope="col">Word</th>
+                    <th scope="col" *ngIf="showSynonyms">Synonyms</th> <!--Column for 2st synonym-->
+                    <th scope="col" *ngIf="showSynonyms"></th> <!--Column for 2nd synonym-->
+                    <th scope="col" *ngIf="showSynonyms"></th> <!--Column for 3rd synonym-->
+                    <th scope="col" *ngIf="showSynonyms"></th> <!--Column for collapse button-->
                 </tr>
-            </ng-container>
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody *ngFor="let word of dictionary.words; index as i">
+                <tr>
+                    <!--Checkbox-->
+                    <td scope="col" class="remove-col">
+                        <input type="checkbox" [(ngModel)]="checkboxArray[i]" (change)="addWordToRemove(word)">
+                    </td>
+                    <!--Word-->
+                    <td scope="col">
+                        <div ngbDropdown>
+                            <span id="dropdownBasic1" ngbDropdownToggle>{{ word.word | titlecase }}</span>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                <button ngbDropdownItem (click)="removeWord(word)">Remove</button>
+                                <button ngbDropdownItem (click)="getWordSynonyms(word, 'noun')">Show Noun Synonyms</button>
+                                <button ngbDropdownItem (click)="getWordSynonyms(word, 'verb')">Show Verb Synonyms</button>
+                                <button ngbDropdownItem (click)="hideSynonyms()">Hide Synonyms</button>
+                            </div>
+                        </div>
+                    </td>                
+                    <!--Synonyms-->
+                    <ng-container *ngIf="showSynonyms">
+                        <ng-container *ngFor="let syn of wordSynonyms.get(word).slice(0,3)">
+                            <td scope="col">
+                                <div ngbDropdown>
+                                    <span  id="dropdownBasic1" ngbDropdownToggle>{{ syn | titlecase }}</span>
+                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                        <button ngbDropdownItem (click)="addSyn(word, syn)">Add</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <td *ngIf="wordSynonyms.get(word).slice(0,3).length <= 0"></td>
+                        <td *ngIf="wordSynonyms.get(word).slice(0,3).length <= 1"></td>
+                        <td *ngIf="wordSynonyms.get(word).slice(0,3).length <= 2"></td>
+                        <!--Collapse button-->
+                        <td>
+                            <!--Shows only when more than three synonyms-->
+                            <span class="collapse-synonyms" *ngIf="wordSynonyms.get(word).length > 3" (click)="expandRow(i)">+</span>
+                        </td>
+                    </ng-container>
+                </tr>
+                <!--Collapsible synonym row-->
+                <ng-container *ngIf="expandedRow[i]">
+                    <tr *ngFor="let row of numOfRows.get(word); index as j">
+                        <td></td> <!--Place holder for checkbox-->
+                        <td></td> <!--Place holder for Word-->
+                        <ng-container *ngFor="let syn of wordSynonyms.get(word).slice(3+(3*j),6+(3*j))">
+                            <td>
+                                <div ngbDropdown>
+                                    <span  id="dropdownBasic1" ngbDropdownToggle>{{ syn | titlecase }}</span>
+                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                    <button ngbDropdownItem (click)="addSyn(word, syn)">Add</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <td *ngIf="wordSynonyms.get(word).slice(3+(3*j),6+(3*j)).length <= 1"></td>
+                        <td *ngIf="wordSynonyms.get(word).slice(3+(3*j),6+(3*j)).length <= 2"></td>
+                        <td></td> <!--Place holder for collapse btn-->
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </ng-container>
 </div>
 
 <ng-template #deleteModal let-modal>
