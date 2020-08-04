@@ -34,6 +34,7 @@ export class ShowDictionaryComponent implements OnInit {
       owner: null,
       view: null,
       tags: [],
+      size: 0,
       words: []
     }
     this.addWord = {

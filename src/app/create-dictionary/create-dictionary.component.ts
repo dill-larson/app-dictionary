@@ -36,6 +36,7 @@ export class CreateDictionaryComponent implements OnInit, OnDestroy {
       name: '',
       owner: this.user.id,
       view: Views.Public,
+      size: 0,
       tags: []
     };
   }
