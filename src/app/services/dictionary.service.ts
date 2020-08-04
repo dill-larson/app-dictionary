@@ -82,7 +82,7 @@ export class DictionaryService {
       this.afs.collection('dictionaries').doc(dictionaryID).update({
         "size": querySnapshot.size
       })
-    });
+    }).unsubscribe();
   }
 
   getWords(dictionaryID: string) { //: Observable<Word[]>
@@ -101,6 +101,6 @@ export class DictionaryService {
       this.afs.collection('dictionaries').doc(dictionaryID).update({
         "size": querySnapshot.size
       })
-    });
+    }).unsubscribe();
   }
 }
