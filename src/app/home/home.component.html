@@ -4,17 +4,20 @@
         <p *ngIf="user == null">Login and create your own dictionary by clicking <b><a routerLink="./create-dictionary" routerLinkActive="active">Create Dictionary</a></b>!</p>
 
         <!--Dictionary Cards-->
-        <!-- <ng-container *ngFor="let iterations of length; index as i">
+        <ng-container *ngFor="let iterations of length; index as i">
             <div class="card-deck mb-4">
                 <div *ngFor="let dictionary of user.library.slice(0+i*4, 4+i*4)" class="card">
                     <h5 class="card-header">{{ dictionary.name }}</h5>
                     <div class="card-body">
-                        <h5 class="card-title">{{ dictionary.words?.length }} Words</h5>
-                        <h6 class="card-subtitle mb-2">Tags</h6>
+                        <h5 class="card-title">{{ dictionary.size }} Words</h5>
+                        <!--Tags-->
+                        <div class="mb-1">
+                            <span class="badge badge-pill badge-secondary mr-1" *ngFor="let tag of dictionary.tags">{{ tag }}</span>
+                        </div>
                         <a [routerLink]="['/dictionary', dictionary.id]" class="btn btn-primary btn-sm">Goto Dictionary</a>
                     </div>
                 </div>
             </div>
-        </ng-container> -->
+        </ng-container>
     </div>
 </main>

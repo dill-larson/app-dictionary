@@ -38,14 +38,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     if(this.userSubscription != null) {
       this.userSubscription.unsubscribe();
     }
-    if(this.dictionarySubscrition != null) {
-      this.dictionarySubscrition.unsubscribe();
-    }
+    // if(this.dictionarySubscrition != null) {
+    //   this.dictionarySubscrition.unsubscribe();
+    // }
   }
 
   getUserLibrary(user: User) {
     if(user?.id != null) {
-      this.dictionarySubscrition = this.dictionaryService.getDictionaries(user.id).subscribe(dictionaries => {
+      this.dictionaryService.testGetDictionaries(user.id).then(dictionaries => {
         this.user.library = dictionaries;
         //TODO: Find a better solution of displaying cards
         this.length = new Array<number>(Math.ceil(dictionaries.length/4));
