@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DictionaryService } from '../services/dictionary.service';
 import { Dictionary } from '../models/dictionary';
 import { Word } from '../models/word';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-show-dictionary',
@@ -26,6 +27,8 @@ export class ShowDictionaryComponent implements OnInit {
   public error: boolean;
   public functionError: string;
   public wordError: string;
+  private dictionarySubscription: Subscription;
+  private wordSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, private modalService: NgbModal) {
     this.dictionary = {
@@ -57,18 +60,25 @@ export class ShowDictionaryComponent implements OnInit {
     this.route.params.subscribe(event => {
       this.dictionary.id = event.dict;
       this.getDictionary(this.dictionary.id);
-     });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.dictionarySubscription.unsubscribe();
+    this.wordSubscription.unsubscribe();
   }
 
   getDictionary(dictionaryID: string) {
     if(dictionaryID != '') {
-      this.dictionaryService.getDictionary(dictionaryID).subscribe(dict => {
+      this.dictionarySubscription = this.dictionaryService.getDictionary(dictionaryID).subscribe(dict => {
         this.dictionary = dict;
+        console.log("GetDictionary. Dictionary:", this.dictionary);
       });
-      this.dictionaryService.getWords(dictionaryID).subscribe(words => {
+      this.wordSubscription = this.dictionaryService.getWords(dictionaryID).subscribe(words => {
         this.dictionary.words = words as Word[];
         this.initCheckboxArray();
         this.initWordSynArrays();
+        console.log("GetDictionary. Words:", this.dictionary.words);
       });
     }
   }
@@ -147,20 +157,18 @@ export class ShowDictionaryComponent implements OnInit {
     for (let i = 0; i < this.checkboxArray.length; i++) {
       this.checkboxArray[i] = this.check;
     }
-    console.log(this.checkboxArray);
   }
 
   removeWords() {
     for(let word of this.wordsToRemove) {
       this.removeWord(word);
     }
+    //this.ngOnDestroy();
+    this.ngOnInit();
   }
 
   removeWord(word: Word) {
-    console.log(this.dictionary.id);
     this.dictionaryService.deleteWord(this.dictionary.id, word);
-
-    this.ngOnInit();
   }
 
   addSyn(word: Word, syn: string) {
