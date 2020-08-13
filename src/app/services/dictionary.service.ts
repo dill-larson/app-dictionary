@@ -82,7 +82,7 @@ export class DictionaryService {
       this.afs.collection('dictionaries').doc(dictionaryID).update({
         "size": querySnapshot.size
       })
-    }).unsubscribe();
+    });
   }
 
   getWords(dictionaryID: string) { //: Observable<Word[]>
@@ -94,13 +94,14 @@ export class DictionaryService {
   }
 
   deleteWord(dictionaryID: string, word: Word) {
-    const path = 'dictionaries/' + dictionaryID + '/words/' + word.word;
-    this.wordDoc = this.afs.doc(path);
+    const path = 'dictionaries/' + dictionaryID;
+    const pathWord = path + '/words/' + word.word;
+    this.wordDoc = this.afs.doc(pathWord);
     this.wordDoc.delete();
     this.afs.doc(path).collection('words').get().subscribe(querySnapshot => {
       this.afs.collection('dictionaries').doc(dictionaryID).update({
         "size": querySnapshot.size
       })
-    }).unsubscribe();
+    });
   }
 }
