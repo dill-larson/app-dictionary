@@ -26,6 +26,8 @@ import { DictionaryService } from './services/dictionary.service';
 import { ThesaurusService } from './services/thesaurus.service';
 
 import { HttpErrorInterceptor } from './services/http-error-interceptor.service';
+import { ShowTagComponent } from './show-tag/show-tag.component';
+import { SearchTagComponent } from './search-tag/search-tag.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { HttpErrorInterceptor } from './services/http-error-interceptor.service'
     SearchItemComponent,
     ProfileComponent,
     ShowDictionaryComponent,
-    FooterComponent
+    FooterComponent,
+    ShowTagComponent,
+    SearchTagComponent
   ],
   imports: [
     BrowserModule,
