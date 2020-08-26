@@ -58,6 +58,20 @@ export class DictionaryService {
       })
   }
 
+  getDictionariesByTag(tag: string): Promise<Dictionary[]> {
+    return this.afs.collection('dictionaries').ref.where('tags', 'array-contains', tag).orderBy('name')
+      .get()
+      .then(querySnapshot => {
+        var dictionaries = new Array<Dictionary>();
+        querySnapshot.forEach(document => {
+          const data = document.data() as Dictionary;
+          const id = document.id;
+          dictionaries.push({ id, ...data });
+        });
+        return dictionaries;
+      })
+  }
+
   getDictionary(dictionaryID: string): Observable<Dictionary> {
     const path = 'dictionaries/' + dictionaryID;
     this.dictionaryDoc = this.afs.doc(path);
