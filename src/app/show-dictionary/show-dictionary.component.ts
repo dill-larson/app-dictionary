@@ -90,7 +90,7 @@ export class ShowDictionaryComponent implements OnInit {
         this.deleteDictionary();
       }
       else if(result == "save") {
-        if(this.tagsToBeAdded.length > 0) {
+        if(this.tagsToBeAdded?.length > 0) {
           this.addTags(this.tagsToBeAdded);
         }
         this.updateTags();
@@ -204,6 +204,7 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   updateTags() {
+    console.log(this.tags);
     this.dictionaryService.updateTags(this.dictionary.id, Array.from(this.tags));
   }
 
