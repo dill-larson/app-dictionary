@@ -1,1 +1,25 @@
-<p>search-tag works!</p>
+<div class="container">
+    <!--Title-->
+    <div class="text-left mb-4">
+        <span class="h2 align-middle font-weight-normal">{{ tag | titlecase }}</span>
+    </div>
+
+    <!--Error alert-->
+    <ngb-alert *ngIf="error?.code" type="danger" (close)="closeError()">
+        <strong>{{ error.code | titlecase }}:</strong> {{ error.message }}
+    </ngb-alert>
+
+    <!--Dictionary Title-->
+    <div class="text-left">
+        <h3 class="h3 font-weight-normal">Dictionaries:</h3>
+    </div>
+
+    <!--Dictionaries-->
+    <div class="card">
+        <ul class="list-group list-group-flush" *ngFor="let dictionary of taggedDictionaries">
+            <li class="list-group-item">
+                {{ dictionary.name | titlecase }} - {{ dictionary.size }} Words
+            </li>
+        </ul>
+    </div>
+</div>
