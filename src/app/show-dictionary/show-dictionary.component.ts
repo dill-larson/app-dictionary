@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 })
 export class ShowDictionaryComponent implements OnInit {
   public dictionary: Dictionary;
+  public words: Word[];
   public wordSynonyms: Map<Word, Array<String>>;
   public numOfRows: Map<Word, Array<Number>>
   public addWord: Word;
@@ -77,7 +78,7 @@ export class ShowDictionaryComponent implements OnInit {
         this.tags = new Set(dict.tags);
       });
       this.wordSubscription = this.dictionaryService.getWords(dictionaryID).subscribe(words => {
-        this.dictionary.words = words as Word[];
+        this.words = words as Word[];
         this.initCheckboxArray();
         this.initWordSynArrays();
       });
@@ -99,7 +100,7 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   initWordSynArrays() {
-    for(let word of this.dictionary.words) {
+    for(let word of this.words) {
       this.wordSynonyms.set(word, new Array<String>());
     }
   }
@@ -154,7 +155,7 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   initCheckboxArray() {
-    for(let word of this.dictionary.words) {
+    for(let word of this.words) {
       this.checkboxArray.push(false);
       this.expandedRow.push(false);
     }
@@ -204,7 +205,6 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   updateTags() {
-    console.log(this.tags);
     this.dictionaryService.updateTags(this.dictionary.id, Array.from(this.tags));
   }
 
