@@ -118,4 +118,11 @@ export class DictionaryService {
       })
     });
   }
+
+  updateTags(dictionaryID: string, tags: string[]) {
+    const path = 'dictionaries/' + dictionaryID;
+    this.afs.doc(path).update({
+      tags: tags
+    });
+  }
 }
