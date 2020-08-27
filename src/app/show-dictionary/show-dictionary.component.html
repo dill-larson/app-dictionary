@@ -1,4 +1,5 @@
 <div class="container">
+    <!--Dictionary Name-->
     <div class="text-left mb-1">
         <h3 class="h3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ dictionary.words?.length }} Words)</h3>
     </div>
@@ -8,13 +9,16 @@
         <span class="badge badge-pill badge-secondary mr-1" [routerLink]="['/tag', tag]" *ngFor="let tag of dictionary.tags">{{ tag }}</span>
     </div>
 
+    <!--Error-->
     <ngb-alert *ngIf="error" type="danger" (close)="closeError()">
         <strong>Error!</strong> {{ functionError | titlecase }} synonyms do not exist for <strong>{{ wordError }}</strong>
     </ngb-alert>
 
+    <!--Buttons-->
     <button *ngIf="dictionary.words?.length > 0" class="btn btn-primary" (click)="removeWords()">Remove Word(s)</button>
     <button class="btn btn-danger" (click)="open(deleteModal)">Delete Dictionary</button>
 
+    <!--Words-->
     <ng-container *ngIf="dictionary.words?.length > 0; else noWords">
         <table class="table">
             <thead>
