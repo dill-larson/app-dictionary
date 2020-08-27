@@ -17,7 +17,7 @@
     <!--Dictionaries-->
     <div class="card">
         <ul class="list-group list-group-flush" *ngFor="let dictionary of taggedDictionaries">
-            <li class="list-group-item">
+            <li class="list-group-item" [routerLink]="['/dictionary', dictionary.id]">
                 {{ dictionary.name | titlecase }} - {{ dictionary.size }} Words
             </li>
         </ul>
