@@ -21,3 +21,6 @@ span {
 .row {
     border: black;
 }
+.badge {
+    cursor: pointer;
+}

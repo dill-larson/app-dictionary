@@ -12,7 +12,7 @@
                         <h5 class="card-title">{{ dictionary.size }} Words</h5>
                         <!--Tags-->
                         <div class="mb-1">
-                            <span class="badge badge-pill badge-secondary mr-1" *ngFor="let tag of dictionary.tags">{{ tag }}</span>
+                            <span class="badge badge-pill badge-secondary mr-1" [routerLink]="['/tag', tag]" *ngFor="let tag of dictionary.tags">{{ tag }}</span>
                         </div>
                         <a [routerLink]="['/dictionary', dictionary.id]" class="btn btn-primary btn-sm">Goto Dictionary</a>
                     </div>
