@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'create-dictionary', component: CreateDictionaryComponent },
   { path: 'search/:key', component: SearchItemComponent },
-  { path: 'search/tag/:tag', component: SearchTagComponent },
+  { path: 'tag/:tag', component: SearchTagComponent },
   { path: 'profile/:user', component: ProfileComponent },
   { path: 'dictionary/:dict', component: ShowDictionaryComponent },
   { path: '**', component: PageNotFoundComponent }
