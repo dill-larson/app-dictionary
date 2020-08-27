@@ -29,6 +29,8 @@ export class ShowDictionaryComponent implements OnInit {
   public wordError: string;
   private dictionarySubscription: Subscription;
   private wordSubscription: Subscription;
+  public tags: Set<string>;
+  public tagsToBeAdded: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, private modalService: NgbModal) {
     this.dictionary = {
@@ -72,21 +74,26 @@ export class ShowDictionaryComponent implements OnInit {
     if(dictionaryID != '') {
       this.dictionarySubscription = this.dictionaryService.getDictionary(dictionaryID).subscribe(dict => {
         this.dictionary = dict;
-        console.log("GetDictionary. Dictionary:", this.dictionary);
+        this.tags = new Set(dict.tags);
       });
       this.wordSubscription = this.dictionaryService.getWords(dictionaryID).subscribe(words => {
         this.dictionary.words = words as Word[];
         this.initCheckboxArray();
         this.initWordSynArrays();
-        console.log("GetDictionary. Words:", this.dictionary.words);
       });
     }
   }
 
   open(content) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      if(result = "delete") {
+      if(result == "delete") {
         this.deleteDictionary();
+      }
+      else if(result == "save") {
+        if(this.tagsToBeAdded.length > 0) {
+          this.addTags(this.tagsToBeAdded);
+        }
+        this.updateTags();
       }
     });
   }
@@ -190,6 +197,20 @@ export class ShowDictionaryComponent implements OnInit {
     this.dictionaryService.deleteDictionary(this.dictionary.id)
       .then(() => this.router.navigate(['/']))
       .catch(error => console.error(error));
+  }
+
+  deleteTag(tag: string) {
+    this.tags.delete(tag);
+  }
+
+  updateTags() {
+    this.dictionaryService.updateTags(this.dictionary.id, Array.from(this.tags));
+  }
+
+  addTags(tags: string) {
+    for(let tag of tags.split(",")) {
+      this.tags.add(tag);
+    }
   }
 
 }
