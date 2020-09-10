@@ -1,4 +1,4 @@
-<div class="container">
+<div *ngIf="canRead(); else noAccess" class="container">
     <!--Dictionary Name-->
     <div class="text-left mb-1">
         <h3 class="h3 font-weight-normal">{{ dictionary.name | titlecase }} ({{ words?.length }} Words)</h3>
@@ -15,9 +15,9 @@
     </ngb-alert>
 
     <!--Buttons-->
-    <button *ngIf="words?.length > 0" class="btn btn-primary" (click)="removeWords()">Remove Word(s)</button>
-    <button class="btn btn-danger" (click)="open(deleteModal)">Delete Dictionary</button>
-    <button class="btn btn-secondary" (click)="open(editModal)">Edit Dictionary</button>
+    <button *ngIf="words?.length > 0 && canEdit()" class="btn btn-primary" (click)="removeWords()">Remove Word(s)</button>
+    <button *ngIf="canDelete()" class="btn btn-danger" (click)="open(deleteModal)">Delete Dictionary</button>
+    <button *ngIf="canEdit()" class="btn btn-secondary" (click)="open(editModal)">Edit Dictionary</button>
 
     <!--Words-->
     <ng-container *ngIf="words?.length > 0; else noWords">
@@ -46,7 +46,7 @@
                         <div ngbDropdown>
                             <span id="dropdownBasic1" ngbDropdownToggle>{{ word.word | titlecase }}</span>
                             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                <button ngbDropdownItem (click)="removeWord(word)">Remove</button>
+                                <button ngbDropdownItem *ngIf="canEdit()" (click)="removeWord(word)">Remove</button>
                                 <button ngbDropdownItem (click)="getWordSynonyms(word, 'noun')">Show Noun Synonyms</button>
                                 <button ngbDropdownItem (click)="getWordSynonyms(word, 'verb')">Show Verb Synonyms</button>
                                 <button ngbDropdownItem (click)="hideSynonyms()">Hide Synonyms</button>
@@ -157,5 +157,11 @@
 <ng-template #noWords>
     <div class="container">
         <p>It looks like this dictionary is empty. Try adding some words by searching above.</p>
+    </div>
+</ng-template>
+
+<ng-template #noAccess>
+    <div class="container">
+        <p>It looks like you do not have permission to view this dictionary.</p>
     </div>
 </ng-template>

@@ -3,10 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import { UserService } from '../services/user.service';
+import { User } from '../models/user';
 import { DictionaryService } from '../services/dictionary.service';
 import { Dictionary } from '../models/dictionary';
 import { Word } from '../models/word';
 import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-show-dictionary',
@@ -14,6 +17,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./show-dictionary.component.css']
 })
 export class ShowDictionaryComponent implements OnInit {
+  public user: User;
   public dictionary: Dictionary;
   public words: Word[];
   public wordSynonyms: Map<Word, Array<String>>;
@@ -33,7 +37,7 @@ export class ShowDictionaryComponent implements OnInit {
   public tags: Set<string>;
   public tagsToBeAdded: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, private modalService: NgbModal) {
+  constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, public userService: UserService, private modalService: NgbModal) {
     this.dictionary = {
       id: '',
       name: '',
@@ -60,6 +64,9 @@ export class ShowDictionaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userService.user$.subscribe(user => {
+      this.user = user;
+    });
     this.route.params.subscribe(event => {
       this.dictionary.id = event.dict;
       this.getDictionary(this.dictionary.id);
@@ -69,6 +76,33 @@ export class ShowDictionaryComponent implements OnInit {
   ngOnDestroy(): void {
     this.dictionarySubscription.unsubscribe();
     this.wordSubscription.unsubscribe();
+  }
+
+  canRead(): boolean {
+    if(this.user != null) {
+      return this.dictionary.owner == this.user.id || this.dictionary.editor.includes(this.user.id) || this.dictionary.viewer.includes(this.user.id);
+    }
+    else {
+      return false;
+    }
+  }
+
+  canEdit(): boolean {
+    if(this.user != null) {
+      return this.dictionary.owner == this.user.id || this.dictionary.editor.includes(this.user.id);
+    }
+    else {
+      return false;
+    }
+  }
+
+  canDelete(): boolean {
+    if(this.user != null) {
+      return this.dictionary.owner == this.user.id;
+    }
+    else {
+      return false;
+    }
   }
 
   getDictionary(dictionaryID: string) {
