@@ -54,6 +54,16 @@ export class DictionaryService {
           const id = document.id;
           dictionaries.push({ id, ...data });
         });
+
+        this.afs.collection('dictionaries').ref.where(`editor`, 'array-contains', userID)
+        .get()
+        .then(querySnapshot2 => {
+          querySnapshot2.forEach(document => {
+            const data = document.data() as Dictionary;
+            const id = document.id;
+            dictionaries.push({ id, ...data });
+          })
+        })
         return dictionaries;
       })
   }
