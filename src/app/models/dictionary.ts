@@ -5,6 +5,8 @@ export interface Dictionary {
     id?: string,
     name: string;
     owner: string; //user id
+    editor?: string[];
+    viewer?: string[];
 	//admins: User[];
     //moderators: User[];
     size: number;
