@@ -171,9 +171,10 @@
         <form>
             <div class="form-group">
                 <h6>Editor:</h6>
-                <input class="editor-input" name="editors" type="text" placeholder="Editors">
+                <input class="editor-input" name="editors" [(ngModel)]="editorsToBeAdded" type="text" placeholder="Editors">
                 <h6>Viewers:</h6>
-                <input class="viewers-input" name="viewers" type="text" placeholder="Viewer">
+                <input class="viewers-input" name="viewers" [(ngModel)]="viewersToBeAdded" type="text" placeholder="Viewer">
+                <button type="button" class="btn btn-light" (click)="getLink()">Link Sharing</button>
             </div>
         </form>
     </div>

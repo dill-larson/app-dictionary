@@ -36,6 +36,8 @@ export class ShowDictionaryComponent implements OnInit {
   private wordSubscription: Subscription;
   public tags: Set<string>;
   public tagsToBeAdded: string;
+  public editorsToBeAdded: string;
+  public viewersToBeAdded: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, public userService: UserService, private modalService: NgbModal) {
     this.dictionary = {
@@ -82,11 +84,10 @@ export class ShowDictionaryComponent implements OnInit {
     if(this.user != null) {
       return this.dictionary.owner == this.user.id
       || this.dictionary.editor.includes(this.user.id)
-      || this.dictionary.viewer.includes(this.user.id)
-      || this.dictionary.viewer.includes('anyone');
+      || this.dictionary.viewer.includes(this.user.id);
     }
     else {
-      return false;
+      return this.dictionary.viewer.includes('anyone');
     }
   }
 
@@ -134,6 +135,11 @@ export class ShowDictionaryComponent implements OnInit {
         this.updateTags();
       }
     });
+  }
+
+  getLink() {
+    this.dictionary.viewer.push('anyone');
+    this.dictionaryService.updateViewers(this.dictionary.id, this.dictionary.viewer);
   }
 
   initWordSynArrays() {
