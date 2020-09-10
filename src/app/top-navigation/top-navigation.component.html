@@ -11,7 +11,7 @@
     <li *ngIf="user?.email != null" ngbDropdown class="nav-item mr-auto">
         <a href (click)="false" class="nav-link" ngbDropdownToggle>Dictionaries</a>
         <div ngbDropdownMenu>
-            <button ngbDropdownItem *ngFor="let dictionary of user.library" [routerLink]="['/dictionary', dictionary.id]">{{ dictionary.name }}</button>
+            <button ngbDropdownItem *ngFor="let dictionary of dictionaries" [routerLink]="['/dictionary', dictionary.id]">{{ dictionary.name }}</button>
             <button ngbDropdownItem [disabled]="true" *ngIf="user.library == undefined">You have no Dictionaries</button>
         </div>
     </li>

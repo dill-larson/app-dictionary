@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { DictionaryService } from '../services/dictionary.service';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
-
+import { Dictionary } from '../models/dictionary';
 
 @Component({
   selector: 'app-top-navigation',
@@ -15,6 +15,7 @@ import { User } from '../models/user';
 export class TopNavigationComponent implements OnInit, OnDestroy {
   public searchItem: String;
   public user: User;
+  public dictionaries: Dictionary[];
   private userSubscription: Subscription;
 
   constructor(private router: Router, private userService: UserService, private dictionaryService: DictionaryService) {
@@ -40,7 +41,7 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
   getUserLibrary(user: User) {
     if(user?.id != null) {
       this.dictionaryService.getDictionaries(user.id).then(dictionaries => {
-        this.user.library = dictionaries;
+        this.dictionaries = dictionaries;
       });
     }
   }
