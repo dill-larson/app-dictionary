@@ -135,4 +135,11 @@ export class DictionaryService {
       tags: tags
     });
   }
+
+  updateViewers(dictionaryID: string, viewers: string[]) {
+    const path = 'dictionaries/' + dictionaryID;
+    this.afs.doc(path).update({
+      viewer: viewers
+    });
+  }
 }
