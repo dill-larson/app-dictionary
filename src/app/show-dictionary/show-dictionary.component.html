@@ -18,6 +18,12 @@
     <button *ngIf="words?.length > 0 && canEdit()" class="btn btn-primary" (click)="removeWords()">Remove Word(s)</button>
     <button *ngIf="canDelete()" class="btn btn-danger" (click)="open(deleteModal)">Delete Dictionary</button>
     <button *ngIf="canEdit()" class="btn btn-secondary" (click)="open(editModal)">Edit Dictionary</button>
+    <button *ngIf="canDelete()" class="btn btn-secondary" (click)="open(shareModal)">
+        <a>Share </a>
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-share-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
+        </svg>
+    </button>
 
     <!--Words-->
     <ng-container *ngIf="words?.length > 0; else noWords">
@@ -145,6 +151,29 @@
                     </span>
                 </div>
                 <input class="tag-input" name="tags" [(ngModel)]="tagsToBeAdded" type="text" placeholder="Tags">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('cross click')">Close</button>
+        <button type="button" class="btn btn-success" (click)="modal.close('save')">Save</button>
+    </div>
+</ng-template>
+
+<ng-template #shareModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Share Dictionary {{ dictionary.name}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <h6>Editor:</h6>
+                <input class="editor-input" name="editors" type="text" placeholder="Editors">
+                <h6>Viewers:</h6>
+                <input class="viewers-input" name="viewers" type="text" placeholder="Viewer">
             </div>
         </form>
     </div>

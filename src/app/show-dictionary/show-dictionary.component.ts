@@ -80,7 +80,10 @@ export class ShowDictionaryComponent implements OnInit {
 
   canRead(): boolean {
     if(this.user != null) {
-      return this.dictionary.owner == this.user.id || this.dictionary.editor.includes(this.user.id) || this.dictionary.viewer.includes(this.user.id);
+      return this.dictionary.owner == this.user.id
+      || this.dictionary.editor.includes(this.user.id)
+      || this.dictionary.viewer.includes(this.user.id)
+      || this.dictionary.viewer.includes('anyone');
     }
     else {
       return false;
