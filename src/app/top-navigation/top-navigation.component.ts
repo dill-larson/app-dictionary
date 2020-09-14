@@ -13,10 +13,11 @@ import { Dictionary } from '../models/dictionary';
   styleUrls: ['./top-navigation.component.css']
 })
 export class TopNavigationComponent implements OnInit, OnDestroy {
-  public searchItem: String;
-  public user: User;
-  public dictionaries: Dictionary[];
-  private userSubscription: Subscription;
+    public collapsed: boolean = true;
+    public searchItem: String;
+    public user: User;
+    public dictionaries: Dictionary[];
+    private userSubscription: Subscription;
 
   constructor(private router: Router, private userService: UserService, private dictionaryService: DictionaryService) {
     this.user = {
@@ -40,9 +41,10 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
 
   getUserLibrary(user: User) {
     if(user?.id != null) {
-      this.dictionaryService.getDictionaries(user.id).then(dictionaries => {
-        this.dictionaries = dictionaries;
-      });
+    //   this.dictionaryService.getDictionaries(user.id).then(dictionaries => {
+    //     this.dictionaries = dictionaries;
+    //   });
+    this.dictionaries = null;
     }
   }
 
