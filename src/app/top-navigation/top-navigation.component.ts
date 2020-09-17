@@ -31,7 +31,7 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
     this.searchItem = '';
     this.userSubscription = this.userService.user$.subscribe(user => {
       this.user = user;
-      this.getDictionaries(this.user.email);
+      this.getDictionaries(this.user?.email);
     });
   }
 

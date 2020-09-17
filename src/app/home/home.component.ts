@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userSubscription = this.userService.user$.subscribe(user => {
       this.user = user;
-      this.getDictionaries(user.email);
+      this.getDictionaries(user?.email);
     });
   }
 
