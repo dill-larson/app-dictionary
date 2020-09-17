@@ -106,6 +106,7 @@
     </ng-container>
 </div>
 
+<!--Delete Modal-->
 <ng-template #deleteModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Delete Dictionary</h4>
@@ -130,6 +131,7 @@
     </div>
 </ng-template>
 
+<!--Edit Modal-->
 <ng-template #editModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Edit Dictionary Details</h4>
@@ -160,6 +162,7 @@
     </div>
 </ng-template>
 
+<!--Share Modal-->
 <ng-template #shareModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Share Dictionary {{ dictionary.name }}</h4>
@@ -169,9 +172,11 @@
     </div>
     <div class="modal-body">
         <form>
-            <div class="form-group">
-                <h6>Editors:</h6>
-                <div class="mb-1">
+            <div class="form-group container">
+                <div class="row">
+                    <label>Editors:</label>
+                </div>
+                <div *ngIf="editors?.size > 0" class="row mb-2">
                     <span *ngFor="let editor of editors" class="badge badge-pill badge-secondary mr-1">
                         {{ editor }}
                         <a class="editor-close-button" (click)="deleteEditor(editor)">
@@ -181,9 +186,13 @@
                         </a>
                     </span>
                 </div>
-                <input class="editor-input" name="editors" [(ngModel)]="editorsToBeAdded" type="text" placeholder="Editors">
-                <h6>Viewers:</h6>
-                <div class="mb-1">
+                <div class="row">
+                    <input class="editor-input" name="editors" [(ngModel)]="editorsToBeAdded" type="text" placeholder="Editors">
+                </div>
+                <div class="row">
+                    <label>Viewers:</label>
+                </div>
+                <div *ngIf="viewers?.size > 0" class="row mb-2">
                     <span *ngFor="let viewer of viewers" class="badge badge-pill badge-secondary mr-1">
                         {{ viewer }}
                         <a class="viewer-close-button" (click)="deleteViewer(viewer)">
@@ -193,8 +202,15 @@
                         </a>
                     </span>
                 </div>
-                <input class="viewers-input" name="viewers" [(ngModel)]="viewersToBeAdded" type="text" placeholder="Viewer">
-                <button type="button" class="btn btn-light" (click)="getLink()">Link Sharing</button>
+                <div class="row">
+                    <input class="viewers-input" name="viewers" [(ngModel)]="viewersToBeAdded" type="text" placeholder="Viewer">
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-light" (click)="toggleLinkSharing()">Toggle Link Sharing</button>
+                </div>
+                <div class="row">
+                    <label class="text-muted">Linking sharing <b>{{ published }}</b></label>
+                </div>
             </div>
         </form>
     </div>

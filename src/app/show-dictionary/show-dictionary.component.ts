@@ -42,6 +42,7 @@ export class ShowDictionaryComponent implements OnInit {
   public viewers: Set<string>;
   public viewersToBeAdded: string;
   public users: Set<string>;
+  public published: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, public userService: UserService, private modalService: NgbModal) {
     this.dictionary = {
@@ -122,6 +123,7 @@ export class ShowDictionaryComponent implements OnInit {
         this.viewers = new Set(dict.viewer);
         this.editors = new Set(dict.editor);
         this.users = new Set(dict.users);
+        this.published = dict.published;
       });
       this.wordSubscription = this.dictionaryService.getWords(dictionaryID).subscribe(words => {
         this.words = words as Word[];
@@ -151,6 +153,8 @@ export class ShowDictionaryComponent implements OnInit {
             this.addEditors(this.editorsToBeAdded);
           }
           this.updateEditors();
+          this.dictionary.published = this.published;
+          this.dictionaryService.updatePublished(this.dictionary.id, this.dictionary.published);
       }
     });
   }
@@ -189,9 +193,8 @@ export class ShowDictionaryComponent implements OnInit {
     }
   }
 
-  getLink() {
-    this.dictionary.published = true;
-    this.dictionaryService.updatePublished(this.dictionary.id, this.dictionary.published);
+  toggleLinkSharing() {
+    this.published = !this.published;
   }
 
   initWordSynArrays() {
