@@ -36,7 +36,7 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
+    //this.userSubscription.unsubscribe();
   }
 
   getDictionaries(userEmail: string) {
