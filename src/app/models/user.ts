@@ -1,9 +1,5 @@
-import { Dictionary } from './dictionary';
-
 export interface User {
-	id: string;
-	name?: string;
-	email: string;
-	password?: string;
-	library?: Dictionary[];
+	id?: string;
+	name: string;
+    email: string;
 }

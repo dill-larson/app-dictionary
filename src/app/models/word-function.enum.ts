@@ -1,4 +1,4 @@
 export enum WordFunction {
-    Noun,
-    Verb
+    Noun = "NOUN",
+    Verb = "VERB"
 }
