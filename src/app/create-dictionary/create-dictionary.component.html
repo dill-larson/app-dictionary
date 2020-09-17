@@ -18,17 +18,18 @@
             <label for="inputName">Name</label>
         </div>
         
-        <!--Published-->
-        <div class="custom-control custom-switch">
-            <label class="custom-control-label" for="publishedSwitch">Published</label>
-            <label class="muted" *ngIf="dictionary.published">Anyone will be able to view your dictionary.</label>
-            <input name="published" [(ngModel)]="dictionary.published" type="checkbox" class="custom-control-input" id="publishedSwitch" required>
-        </div>
-
         <!--Tags-->
         <div class="form-label-group">
             <input name="tags" [(ngModel)]="tags" type="tags" id="inputTags" class="form-control" placeholder="Tags">
             <label for="inputTags">Tags</label>
+        </div>
+
+        <!--Published-->
+        <div class="custom-control custom-switch">
+            <input name="published" [(ngModel)]="dictionary.published" type="checkbox" class="custom-control-input" id="publishedSwitch">
+            <label class="custom-control-label" for="publishedSwitch">Published</label>
+            <label class="text-muted" *ngIf="!dictionary.published">Only you and added editors/viewers will be able to view your dictionary.</label>
+            <label class="text-muted" *ngIf="dictionary.published">Anyone will be able to view your dictionary.</label>
         </div>
 
         <!--Create Dictionary-->
