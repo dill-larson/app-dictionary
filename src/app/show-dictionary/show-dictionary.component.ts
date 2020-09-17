@@ -168,6 +168,7 @@ export class ShowDictionaryComponent implements OnInit {
   addViewers(viewers: string) {
     for(let viewer of viewers.split(",")) {
       this.viewers.add(viewer);
+      this.users.add(viewer);
     }
   }
 
@@ -184,6 +185,7 @@ export class ShowDictionaryComponent implements OnInit {
   addEditors(editors: string) {
     for(let editor of editors.split(",")) {
       this.editors.add(editor);
+      this.users.add(editor);
     }
   }
 
