@@ -7,6 +7,7 @@ import { DictionaryService } from '../services/dictionary.service';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user';
 import { Error } from '../models/error';
+import { Dictionary } from '../models/dictionary';
 
 @Component({
   selector: 'app-profile',
@@ -14,9 +15,12 @@ import { Error } from '../models/error';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  public confPassword: string;
   public user: User;
+  public password: string;
   public updateU: User;
+  public newPassword: string;
+  public confPassword: string;
+  public dictionaries: Dictionary[];
   private userSubscription: Subscription;
   public error: Error;
 
@@ -24,15 +28,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.user = {
       id: '',
       name: '',
-      email: '',
-      password: '',
-      library: []
+      email: ''
     };
     this.updateU = {
       id: '',
       name: '',
-      email: '',
-      password: ''
+      email: ''
     };
     this.error = {
       code: '',
@@ -51,8 +52,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   open(content) {
-    if(this.user.password) {
-      this.userService.reauthenticateUser(this.user.password)
+    if(this.password) {
+      this.userService.reauthenticateUser(this.password)
       .then(() => {
         this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
           if(result = "delete") {
@@ -84,14 +85,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.userSubscription = this.userService.getUser(id).subscribe(user => {
         if(user == null) {
           this.router.navigate(['**']);
-        }
-        else {
+        } else {
           this.user = user;
           this.updateU = {
             ...this.user
           };
-          this.dictionaryService.getDictionaries(id).then(dictionaries => {
-            this.user.library = dictionaries;
+          this.dictionaryService.testGetDictionaries(this.user.email).then(dictionaries => {
+            this.dictionaries = dictionaries;
           });
         }
       });
@@ -110,8 +110,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   updateUser() {
-    if(this.user.password) {
-      this.userService.reauthenticateUser(this.user.password)
+    if(this.password) {
+      this.userService.reauthenticateUser(this.password)
         .then(() => {
           if(this.updateU.name != this.user.name) {
             console.log("Updating name...");
@@ -129,8 +129,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.error.message = error.message;
               });
           }
-          if(this.updateU.password) {
-            if(this.updateU.password == this.confPassword) {
+          if(this.newPassword) {
+            if(this.newPassword == this.confPassword) {
               this.userService.updateUserPassword(this.updateU.email)
               .catch(error => {
                 this.error.code = error.code;
@@ -143,9 +143,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
           }
 
           //Clear any passwords
-          this.updateU.password = "";
+          this.newPassword = "";
           this.confPassword = "";
-          this.user.password = "";
+          this.password = "";
         })
         .catch(error => {
           this.error.code = error.code.substring(5).replace(/-/g, " "); //subtring(5) removes auth/

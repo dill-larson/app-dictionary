@@ -12,6 +12,7 @@ import { Error } from '../models/error';
 })
 export class LoginComponent implements OnInit {
   public user: User;
+  public password: string;
   public error: Error;
   public rememberMe: boolean;
 
@@ -19,13 +20,11 @@ export class LoginComponent implements OnInit {
     this.error = {
       code: '',
       message: ''
-    }
+    };
     this.user = {
       id: '',
       name: '',
-      email: '',
-      password: '',
-      library: []
+      email: ''
     };
   }
 
@@ -44,12 +43,12 @@ export class LoginComponent implements OnInit {
   }
 
   validateUserInput(): boolean {
-    return this.user.email != '' && this.user.password != '';
+    return this.user.email != '' && this.password != '';
   }
 
   emailSignin() {
     if(this.validateUserInput()) {
-      this.userService.emailSignin(this.user.email, this.user.password)
+      this.userService.emailSignin(this.user.email, this.password)
       .then(() => {
         if(this.rememberMe) {
           localStorage.setItem("userEmail", this.user.email);

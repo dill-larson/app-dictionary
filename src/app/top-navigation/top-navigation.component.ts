@@ -22,8 +22,8 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private userService: UserService, private dictionaryService: DictionaryService) {
     this.user = {
       id: '',
-      email: '',
-      library: []
+      name: '',
+      email: ''
     }
   }
 
@@ -31,7 +31,7 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
     this.searchItem = '';
     this.userSubscription = this.userService.user$.subscribe(user => {
       this.user = user;
-      this.getUserLibrary(this.user);
+      this.getDictionaries(this.user.email);
     });
   }
 
@@ -39,11 +39,11 @@ export class TopNavigationComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
   }
 
-  getUserLibrary(user: User) {
-    if(user?.id != null) {
-    //   this.dictionaryService.getDictionaries(user.id).then(dictionaries => {
-    //     this.dictionaries = dictionaries;
-    //   });
+  getDictionaries(userEmail: string) {
+    if(userEmail != null) {
+      this.dictionaryService.testGetDictionaries(userEmail).then(dictionaries => {
+        this.dictionaries = dictionaries;
+      });
     this.dictionaries = null;
     }
   }

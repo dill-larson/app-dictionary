@@ -30,7 +30,7 @@
 
             <!--New Password-->
             <div class="form-label-group">
-                <input name="newPass" type="password" [(ngModel)]="updateU.password" id="inputNewPass" class="form-control" placeholder="New Password">
+                <input name="newPass" type="password" [(ngModel)]="newPassword" id="inputNewPass" class="form-control" placeholder="New Password">
                 <label for="inputNewPass">New Password</label>
             </div>
 
@@ -42,7 +42,7 @@
             
             <!--Old Password-->
             <div class="form-label-group">
-                <input name="password" type="password" [(ngModel)]="user.password" id="inputPassword" class="form-control" placeholder="Old Password">
+                <input name="password" type="password" [(ngModel)]="password" id="inputPassword" class="form-control" placeholder="Old Password">
                 <label for="inputPassword">Old Password</label>
             </div>
             
@@ -55,8 +55,8 @@
                 <h3 class="h3 mb-3 font-weight-normal">Library:</h3>
             </div> 
             
-            <div *ngFor="let dict of user.library">
-                <a class="h5" [routerLink]="['/dictionary', dict.id]">{{ dict.name }}</a>
+            <div *ngFor="let dictionary of dictionaries">
+                <a class="h5" [routerLink]="['/dictionary', dictionary.id]">{{ dictionary.name }}</a>
             </div>
         </div>
     </div>

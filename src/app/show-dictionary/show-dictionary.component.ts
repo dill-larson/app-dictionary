@@ -9,6 +9,7 @@ import { DictionaryService } from '../services/dictionary.service';
 import { Dictionary } from '../models/dictionary';
 import { Word } from '../models/word';
 import { Subscription } from 'rxjs';
+import { WordFunction } from '../models/word-function.enum';
 
 
 @Component({
@@ -36,22 +37,27 @@ export class ShowDictionaryComponent implements OnInit {
   private wordSubscription: Subscription;
   public tags: Set<string>;
   public tagsToBeAdded: string;
+  public editors: Set<string>;
   public editorsToBeAdded: string;
+  public viewers: Set<string>;
   public viewersToBeAdded: string;
+  public users: Set<string>;
 
   constructor(private route: ActivatedRoute, private router: Router, private http: HttpClient, private dictionaryService: DictionaryService, public userService: UserService, private modalService: NgbModal) {
     this.dictionary = {
-      id: '',
-      name: '',
-      owner: null,
-      view: null,
-      tags: [],
-      size: 0,
-      words: []
+        id: '',
+        name: '',
+        owner: null, //user id
+        editor: [], //user ids
+        viewer: [], //user ids
+        users: [], //all user ids related to roles 
+        published: false, //flag for users to view
+        size: 0,
+        tags: []
     }
     this.addWord = {
       word: '',
-      function: ''
+      function: null
     };
     this.wordSynonyms = new Map<Word, Array<String>>();
     this.numOfRows = new Map<Word, Array<Number>>();
@@ -82,18 +88,17 @@ export class ShowDictionaryComponent implements OnInit {
 
   canRead(): boolean {
     if(this.user != null) {
-      return this.dictionary.owner == this.user.id
-      || this.dictionary.editor.includes(this.user.id)
-      || this.dictionary.viewer.includes(this.user.id);
-    }
-    else {
-      return this.dictionary.viewer.includes('anyone');
+      return this.dictionary.owner == this.user.email
+      || this.dictionary.editor.includes(this.user.email)
+      || this.dictionary.viewer.includes(this.user.email);
+    } else {
+        return this.dictionary.published;
     }
   }
 
   canEdit(): boolean {
     if(this.user != null) {
-      return this.dictionary.owner == this.user.id || this.dictionary.editor.includes(this.user.id);
+      return this.dictionary.owner == this.user.email || this.dictionary.editor.includes(this.user.email);
     }
     else {
       return false;
@@ -102,7 +107,7 @@ export class ShowDictionaryComponent implements OnInit {
 
   canDelete(): boolean {
     if(this.user != null) {
-      return this.dictionary.owner == this.user.id;
+      return this.dictionary.owner == this.user.email;
     }
     else {
       return false;
@@ -114,6 +119,9 @@ export class ShowDictionaryComponent implements OnInit {
       this.dictionarySubscription = this.dictionaryService.getDictionary(dictionaryID).subscribe(dict => {
         this.dictionary = dict;
         this.tags = new Set(dict.tags);
+        this.viewers = new Set(dict.viewer);
+        this.editors = new Set(dict.editor);
+        this.users = new Set(dict.users);
       });
       this.wordSubscription = this.dictionaryService.getWords(dictionaryID).subscribe(words => {
         this.words = words as Word[];
@@ -134,12 +142,54 @@ export class ShowDictionaryComponent implements OnInit {
         }
         this.updateTags();
       }
+      else if(result =="update") {
+          if(this.viewersToBeAdded?.length > 0) {
+              this.addViewers(this.viewersToBeAdded);
+          }
+          this.updateViewers();
+          if(this.editorsToBeAdded?.length > 0) {
+            this.addEditors(this.editorsToBeAdded);
+          }
+          this.updateEditors();
+      }
     });
   }
 
+  updateViewers() {
+    this.dictionaryService.updateViewers(this.dictionary.id, Array.from(this.viewers));
+    this.dictionaryService.updateUsers(this.dictionary.id, Array.from(this.users));
+  }
+
+  deleteViewer(viewer: string) {
+    this.viewers.delete(viewer);
+    this.users.delete(viewer);
+  }
+
+  addViewers(viewers: string) {
+    for(let viewer of viewers.split(",")) {
+      this.viewers.add(viewer);
+    }
+  }
+
+  updateEditors() {
+    this.dictionaryService.updateEditors(this.dictionary.id, Array.from(this.editors));
+    this.dictionaryService.updateUsers(this.dictionary.id, Array.from(this.users));
+  }
+
+  deleteEditor(editor: string) {
+    this.editors.delete(editor);
+    this.users.delete(editor);
+  }
+
+  addEditors(editors: string) {
+    for(let editor of editors.split(",")) {
+      this.editors.add(editor);
+    }
+  }
+
   getLink() {
-    this.dictionary.viewer.push('anyone');
-    this.dictionaryService.updateViewers(this.dictionary.id, this.dictionary.viewer);
+    this.dictionary.published = true;
+    this.dictionaryService.updatePublished(this.dictionary.id, this.dictionary.published);
   }
 
   initWordSynArrays() {

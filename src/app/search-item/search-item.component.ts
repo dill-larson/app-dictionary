@@ -27,6 +27,7 @@ export class SearchItemComponent implements OnInit, OnDestroy {
   public error: Error;
   public word: Word;
   public dictionary: Dictionary;
+  public dictionaries: Dictionary[];
   private userSubscription: Subscription;
 
   constructor(private route: ActivatedRoute, private userService: UserService, private dictionaryService: DictionaryService, private thesaurusService: ThesaurusService) {
@@ -37,12 +38,11 @@ export class SearchItemComponent implements OnInit, OnDestroy {
     this.user = {
       id: '',
       name: '',
-      email: '',
-      library: []
+      email: ''
     }
     this.word = {
       word: '',
-      function: ''
+      function: null
     };
   }
 
@@ -62,8 +62,8 @@ export class SearchItemComponent implements OnInit, OnDestroy {
   getUser() {
     this.userSubscription = this.userService.user$.subscribe(user => { 
       this.user = user;
-      this.dictionaryService.getDictionaries(this.user.id).then(dictionaries => {
-        this.user.library = dictionaries;
+      this.dictionaryService.getEditableDictionaries(this.user.email).then(dictionaries => {
+        this.dictionaries = dictionaries;
       });
     });
     
@@ -120,7 +120,7 @@ export class SearchItemComponent implements OnInit, OnDestroy {
 
   addWord(word: string, wordFunction: string, dictionaryID: string) {
     this.word.word = word;
-    this.word.function = wordFunction;
+    this.word.function = WordFunction[wordFunction];
     this.dictionaryService.addWord(dictionaryID, this.word);
   }
 
