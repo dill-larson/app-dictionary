@@ -37,7 +37,7 @@
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                         <button ngbDropdownItem>New Dictionary</button>
                         <div class="dropdown-divider"></div> <!--Horizontal line-->
-                        <button ngbDropdownItem *ngFor="let dict of dictionaries" (click)="addWord(noun,'noun',dict.id)">{{ dict.name }}</button>
+                        <button ngbDropdownItem *ngFor="let dict of dictionaries" (click)="addWord(noun,'Noun',dict.id)">{{ dict.name }}</button>
                     </div>
                 </div>
                 <span class="align-middle">{{ noun | titlecase }}</span>
@@ -58,7 +58,7 @@
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                         <button ngbDropdownItem>New Dictionary</button>
                         <div class="dropdown-divider"></div> <!--Horizontal line-->
-                        <button ngbDropdownItem *ngFor="let dict of dictionaries" (click)="addWord(verb,'verb',dict.id)">{{ dict.name }}</button>
+                        <button ngbDropdownItem *ngFor="let dict of dictionaries" (click)="addWord(verb,'Verb',dict.id)">{{ dict.name }}</button>
                     </div>
                 </div>
                 <span class="align-middle">{{ verb | titlecase }}</span>
