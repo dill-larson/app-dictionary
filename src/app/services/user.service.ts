@@ -142,7 +142,6 @@ export class UserService {
 
     const data: User = {
       id: user.uid,
-      name: user.displayName,
       email: user.email
     };
 
