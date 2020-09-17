@@ -68,6 +68,45 @@ export class DictionaryService {
       })
   }
 
+    testGetDictionaries(userEmail: string) {
+        return this.afs.collection('dictionaries').ref.where('users', 'array-contains', userEmail)
+            .orderBy('name')
+            .get()
+            .then(querySnapshot => {
+                var dictionaries = new Array<Dictionary>();
+                querySnapshot.forEach(document => {
+                    const data = document.data() as Dictionary;
+                    const id = document.id;
+                    dictionaries.push({ id, ...data });
+                })
+                return dictionaries;
+            });
+    }
+
+    getEditableDictionaries(userEmail: string): Promise<Dictionary[]> {
+        return this.afs.collection('dictionaries').ref.where('owner', '==', userEmail).orderBy('name')
+          .get()
+          .then(querySnapshot => {
+            var dictionaries = new Array<Dictionary>();
+            querySnapshot.forEach(document => {
+              const data = document.data() as Dictionary;
+              const id = document.id;
+              dictionaries.push({ id, ...data });
+            });
+    
+            this.afs.collection('dictionaries').ref.where(`editor`, 'array-contains', userEmail)
+            .get()
+            .then(querySnapshot2 => {
+              querySnapshot2.forEach(document => {
+                const data = document.data() as Dictionary;
+                const id = document.id;
+                dictionaries.push({ id, ...data });
+              })
+            })
+            return dictionaries;
+          })
+      }
+
   getDictionariesByTag(tag: string): Promise<Dictionary[]> {
     return this.afs.collection('dictionaries').ref.where('tags', 'array-contains', tag).orderBy('name')
       .get()
@@ -136,10 +175,31 @@ export class DictionaryService {
     });
   }
 
+  updateEditors(dictionaryID: string, editors: string[]) {
+      const path = 'dictionaries/' + dictionaryID;
+      this.afs.doc(path).update({
+          editor: editors
+      });
+  }
+
   updateViewers(dictionaryID: string, viewers: string[]) {
     const path = 'dictionaries/' + dictionaryID;
     this.afs.doc(path).update({
       viewer: viewers
     });
+  }
+
+  updateUsers(dictionaryID: string, users: string[]) {
+      const path = 'dictionaries/' + dictionaryID;
+      this.afs.doc(path).update({
+          users: users
+      });
+  }
+
+  updatePublished(dictionaryID: string, published: boolean) {
+      const path = 'dictionaries/' + dictionaryID;
+      this.afs.doc(path).update({
+          published: published
+      });
   }
 }

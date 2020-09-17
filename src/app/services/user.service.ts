@@ -142,6 +142,7 @@ export class UserService {
 
     const data: User = {
       id: user.uid,
+      name: user.displayName,
       email: user.email
     };
 
@@ -159,4 +160,20 @@ export class UserService {
     this.userDoc = this.afs.doc(path);
     return this.userDoc.valueChanges();
   }
+
+    //Unused: remove
+    public getUserID(email: string) {
+        return this.afs.collection('users').ref.where('email', '==', email)
+        .get()
+        .then(querySnapshot => {
+            var users = new Array<User>();
+            querySnapshot.forEach(document => {
+                const data = document.data() as User;
+                const id = document.id;
+                users.push({ id, ...data });
+            });
+            return users;
+        });
+    }
+
 }
